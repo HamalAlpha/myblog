@@ -52,5 +52,6 @@ public class IndexController {
         p = p < 1 || p > WebConstant.MAX_PAGE ? 1 : p;
         //调用业务层接口，获取mybatis分页插件执行结果
 
+        return "";
     }
 }
