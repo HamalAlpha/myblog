@@ -1,5 +1,6 @@
 package top.arieslee.myblog.controller;
 
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.arieslee.myblog.constant.WebConstant;
-import top.arieslee.myblog.service.impl.ContentService;
+import top.arieslee.myblog.service.ContentService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -51,7 +52,7 @@ public class IndexController {
         //判断页码是否合法,不合法置为1
         p = p < 1 || p > WebConstant.MAX_PAGE ? 1 : p;
         //调用业务层接口，获取mybatis分页插件执行结果
-
+        PageInfo pageInfo= contentService.getContent(p,limit);
         return "";
     }
 }
