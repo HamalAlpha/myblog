@@ -20,7 +20,7 @@ public class ContentVoExample {
     /**
      * @Description : 去重
      **/
-    protected Boolean distinct;
+    protected boolean distinct;
 
     /**
      * @Description : 标准模板集合
@@ -54,7 +54,7 @@ public class ContentVoExample {
         return criteria;
     }
 
-    //
+    //获取首模板
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
         if (criteriaList.size() == 0) {
@@ -71,7 +71,7 @@ public class ContentVoExample {
     //清理
     protected void clear() {
         criteriaList.clear();
-        distinct = null;
+        distinct = false;
         orderByClause = null;
     }
 
@@ -144,7 +144,7 @@ public class ContentVoExample {
          * @Description : 类型相等条件
          **/
         public Criteria andTypeEqualTo(String value) {
-
+            addCriterion("type=", value, "type");
             return (Criteria) this;
         }
 
@@ -152,7 +152,7 @@ public class ContentVoExample {
          * @Description : 状态相等条件
          **/
         public Criteria andStatusEauqlTo(String value) {
-            addCriterion("type=", value, "type");
+            addCriterion("status=", value, "status");
             return (Criteria) this;
         }
 

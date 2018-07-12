@@ -1,5 +1,7 @@
 package top.arieslee.myblog.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @ClassName BaseController
  * @Description 全局控制器，封装基本页面控制层接口
@@ -9,4 +11,20 @@ package top.arieslee.myblog.controller;
  **/
 public class BaseController {
 
+    //主题属性
+    public static String THEME = "themes/default";
+
+    /**
+     * @Description : 页面跳转控制
+     **/
+    protected String rend(String viewName) {
+        return THEME + "/" + viewName;
+    }
+
+    /**
+     * @Description : 分页标题控制
+     **/
+    protected  void title(HttpServletRequest request,String title){
+        request.setAttribute("title",title);
+    }
 }

@@ -1,5 +1,6 @@
 package top.arieslee.myblog.dao;
 
+import org.springframework.stereotype.Component;
 import top.arieslee.myblog.modal.VO.ContentVo;
 import top.arieslee.myblog.modal.VO.ContentVoExample;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @Date 2018/7/10 12:00
  * @Version 1.0
  **/
+@Component
 public interface ContentVoDao {
 
     /**

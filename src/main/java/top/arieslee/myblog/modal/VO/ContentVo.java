@@ -35,7 +35,7 @@ public class ContentVo {
     /**
      * @Description : 内容所属者id
      **/
-    private Integer authodId;
+    private Integer authorId;
     /**
      * @Description : 内容类型
      **/
@@ -43,7 +43,7 @@ public class ContentVo {
     /**
      * @Description : 内容状态
      **/
-    private String stauts;
+    private String status;
     /**
      * @Description : 内容标签
      **/
@@ -51,7 +51,7 @@ public class ContentVo {
     /**
      * @Description :分类
      **/
-    private String catagories;
+    private String categories;
     /**
      * @Description : 点击次数
      **/
@@ -121,12 +121,12 @@ public class ContentVo {
         this.content = content;
     }
 
-    public Integer getAuthodId() {
-        return authodId;
+    public Integer getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthodId(Integer authodId) {
-        this.authodId = authodId;
+    public void setAuthorId(Integer authorId) {
+        this.authorId = authorId;
     }
 
     public String getType() {
@@ -137,12 +137,12 @@ public class ContentVo {
         this.type = type;
     }
 
-    public String getStauts() {
-        return stauts;
+    public String getStatus() {
+        return status;
     }
 
-    public void setStauts(String stauts) {
-        this.stauts = stauts;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getTags() {
@@ -153,12 +153,12 @@ public class ContentVo {
         this.tags = tags;
     }
 
-    public String getCatagories() {
-        return catagories;
+    public String getCategories() {
+        return categories;
     }
 
-    public void setCatagories(String catagories) {
-        this.catagories = catagories;
+    public void setCategories(String categories) {
+        this.categories = categories;
     }
 
     public Integer getHits() {
@@ -210,11 +210,11 @@ public class ContentVo {
                 ", created=" + created +
                 ", modified=" + modified +
                 ", content='" + content + '\'' +
-                ", authodId=" + authodId +
+                ", authorId=" + authorId +
                 ", type='" + type + '\'' +
-                ", stauts='" + stauts + '\'' +
+                ", status='" + status + '\'' +
                 ", tags='" + tags + '\'' +
-                ", catagories='" + catagories + '\'' +
+                ", categories='" + categories + '\'' +
                 ", hits=" + hits +
                 ", commentsNum=" + commentsNum +
                 ", allowComment=" + allowComment +

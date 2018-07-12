@@ -26,11 +26,37 @@
         <result column="content" jdbcType="LONGVARCHAR" property="content"/>
     </resultMap>
 
+    <!--where 子句-->
     <sql id="Example_Where_Clause">
         <where>
-            -- 多个标准模块之间用or连接
+            <!--遍历每个模块，多个标准模版之间用or连接-->
             <foreach collection="criteriaList" item="criteria" separator="or">
-
+                <!-- 判断模版是否为空 -->
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <!-- 遍历模块中每个条件实例 -->
+                        <foreach collection="criteria.criterionList" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="valueItem" open="(" close=")"
+                                             separator=",">
+                                        #{valueItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
             </foreach>
         </where>
     </sql>
@@ -45,19 +71,19 @@
         content
     </sql>
     <!--根据模板查找文章-->
-    <select id="selectByExampleWithBLOBs" parameterMap="top.arieslee.myblog.modal.VO.ContentVoExample"
+    <select id="selectByExampleWithBLOBs" parameterType="top.arieslee.myblog.modal.VO.ContentVoExample"
             resultMap="baseResultMapWithBLOBs">
         select
         <if test="distinct">
             distinct
         </if>
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         ,
-        <include refid="Blob_Column_List" />
+        <include refid="Blob_Column_List"/>
         from t_contents
-        -- _parameter是mybatis的内置属性，代表传入参数
+        <!-- _parameter是mybatis的内置属性，代表传入参数-->
         <if test="_parameter !=null">
-
+            <include refid="Example_Where_Clause"/>
         </if>
         <if test="orderByClause!=null">
             order by ${orderByClause}

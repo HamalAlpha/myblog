@@ -109,6 +109,11 @@
             <!-- 运行时依赖，表示该依赖无需编译 -->
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- apache下的各种工具Logging、Pool、Net、ONGL、EL、IO、DBCP、Email、Collection、Lang…… -->
         <dependency>
@@ -157,6 +162,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+
     </dependencies>
 
     <build>

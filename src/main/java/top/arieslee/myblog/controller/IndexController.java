@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Version 1.0
  **/
 @Controller
-public class IndexController {
+public class IndexController extends BaseController {
     //日志对象
     private final static Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 
@@ -31,7 +31,7 @@ public class IndexController {
 
     /**
      * @Author: Aries
-     * @Description : 初始主页访问，门面模式，为客户暴露简单url接口
+     * @Description : 初始主页访问
      * @Date : 16:20 2018/7/10
      * @Param [request, limit:每页文章数量]
      **/
@@ -40,7 +40,7 @@ public class IndexController {
         //调用子接口处理
         return this.index(request, 1, limit);
     }
-    
+
     /**
      * @Author: Aries
      * @Description :分页控制
@@ -52,7 +52,9 @@ public class IndexController {
         //判断页码是否合法,不合法置为1
         p = p < 1 || p > WebConstant.MAX_PAGE ? 1 : p;
         //调用业务层接口，获取mybatis分页插件执行结果
-        PageInfo pageInfo= contentService.getContent(p,limit);
-        return "";
+        PageInfo articles = contentService.getContent(p, limit);
+        request.setAttribute("articles", articles);
+        super.title(request, "第" + p + "页");
+        return super.rend("index");
     }
 }
