@@ -54,16 +54,16 @@ public class ContentVoExample {
         return criteria;
     }
 
-    //获取首模板
+    //创建模板，并返回
     public Criteria createCriteria() {
-        Criteria criteria = createCriteriaInternal();
         if (criteriaList.size() == 0) {
+            Criteria criteria = createCriteriaInternal();
             criteriaList.add(criteria);
         }
         return criteriaList.get(0);
     }
 
-    //创建内部Criteria对象
+    //创建内部Criteria类对象
     protected Criteria createCriteriaInternal() {
         return new Criteria();
     }
@@ -128,7 +128,7 @@ public class ContentVoExample {
             criterionList = new ArrayList<Criterion>();
         }
 
-        public boolean isValid(){
+        public boolean isValid() {
             return criterionList.size() > 0;
         }
 
@@ -156,11 +156,16 @@ public class ContentVoExample {
             return (Criteria) this;
         }
 
+        public Criteria andSlugEqualTo(String value) {
+            addCriterion("slug=", value, "slug");
+            return (Criteria) this;
+        }
+
         /**
+         * @return void
          * @Description :添加
          * @Date : 15:43 2018/7/11
          * @Param [condition：条件, value：条件值, property：条件名称]
-         * @return void
          **/
         protected void addCriterion(String condition, Object value, String property) {
             if (value == null) {
@@ -168,7 +173,7 @@ public class ContentVoExample {
                 throw new RuntimeException("Value for " + property + " cannot be null");
             }
             //插入新的标准实体
-            criterionList.add(new Criterion(condition,value));
+            criterionList.add(new Criterion(condition, value));
         }
     }
 
@@ -176,7 +181,9 @@ public class ContentVoExample {
      * @Description : 标准模板实现类
      **/
     public static class Criteria extends GeneratedCriteria {
-
+        public Criteria() {
+            super();
+        }
     }
 
     /**
@@ -253,8 +260,8 @@ public class ContentVoExample {
          **/
         protected Criterion(String condition) {
             this.condition = condition;
-            this.noValue=true;
-            this.typeHandler=null;
+            this.noValue = true;
+            this.typeHandler = null;
         }
 
         /**
@@ -265,13 +272,14 @@ public class ContentVoExample {
             this.value = value;
             this.typeHandler = typeHandler;
             //判断值类型
-            if(value instanceof List<?>){
-                this.listValue=true;
-            }else {
-                this.singleValue=true;
+            if (value instanceof List<?>) {
+                this.listValue = true;
+            } else {
+                this.singleValue = true;
             }
         }
-        protected Criterion(String condition, Object value){
+
+        protected Criterion(String condition, Object value) {
             this(condition, value, null);
         }
 
@@ -283,10 +291,11 @@ public class ContentVoExample {
             this.value = value;
             this.secondValue = secondValue;
             this.typeHandler = typeHandler;
-            this.betweenValue=true;
+            this.betweenValue = true;
         }
-        protected Criterion(String condition, Object value, Object secondValue){
-            this(condition,value,secondValue,null);
+
+        protected Criterion(String condition, Object value, Object secondValue) {
+            this(condition, value, secondValue, null);
         }
     }
 }

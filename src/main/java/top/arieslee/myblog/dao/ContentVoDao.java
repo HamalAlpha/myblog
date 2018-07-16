@@ -22,4 +22,14 @@ public interface ContentVoDao {
      * @Param [example：模板]
      **/
     List<ContentVo> selectByExampleWithBLOBs(ContentVoExample example);
+
+    /**
+     * @Description :根据主键查找
+     **/
+    ContentVo selectByPrimaryKey(Integer cid);
+
+    /**
+     * @Description : 根据cid更新文章数据
+     **/
+    void updateByPrimaryKey(ContentVo contentVo);
 }

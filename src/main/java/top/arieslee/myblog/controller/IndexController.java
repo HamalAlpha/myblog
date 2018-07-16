@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.arieslee.myblog.constant.WebConstant;
+import top.arieslee.myblog.modal.VO.ContentVo;
 import top.arieslee.myblog.service.ContentService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,13 +38,13 @@ public class IndexController extends BaseController {
      **/
     @GetMapping(value = {"/", "index"})
     public String index(HttpServletRequest request, @RequestParam(value = "limit", defaultValue = "1") int limit) {
-        //调用子接口处理
+        //调用文章分页接口处理
         return this.index(request, 1, limit);
     }
 
     /**
      * @Author: Aries
-     * @Description :分页控制
+     * @Description :文章分页控制
      * @Date : 16:57 2018/7/10
      * @Param [request, p:当前页码, limit:每页文章数量]
      **/
@@ -56,5 +57,26 @@ public class IndexController extends BaseController {
         request.setAttribute("articles", articles);
         super.title(request, "第" + p + "页");
         return super.rend("index");
+    }
+
+
+    @GetMapping(value = "article/{cid}")
+    /**
+     * @Description : 根据文章id或者文章slug获取文章
+     * @Date : 17:05 2018/7/13
+     * @Param [request, cid]
+     * @return java.lang.String
+     **/
+    public String getArticle(HttpServletRequest request,@PathVariable("cid") String cid){
+        //调用业务层接口处理
+        ContentVo contentVo=contentService.getContent(cid);
+        //文章不存在或者文章非公开转发到404页面
+        if(contentVo==null||contentVo.getStatus().equals("draft")){
+            return super.page404();
+        }
+        //设置页面属性
+        request.setAttribute("article",contentVo);
+        //页面跳转
+        return super.rend("page");
     }
 }

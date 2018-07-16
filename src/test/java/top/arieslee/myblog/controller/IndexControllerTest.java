@@ -27,7 +27,16 @@ public class IndexControllerTest {
 
     @Test
     public void index() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("")).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/page/2")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    public void getArticleByCid() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/article/5")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void getArticleBySlug() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/article/about")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }

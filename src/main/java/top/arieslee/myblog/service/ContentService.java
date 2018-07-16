@@ -1,6 +1,7 @@
 package top.arieslee.myblog.service;
 
 import com.github.pagehelper.PageInfo;
+import top.arieslee.myblog.exception.TipException;
 import top.arieslee.myblog.modal.VO.ContentVo;
 
 /**
@@ -18,5 +19,13 @@ public interface ContentService {
      * @Param [p：当前页码, limit：每页文章数量]
      * @return com.github.pagehelper.PageInfo 返回mybatis分页组件PageInfo
      **/
-    public PageInfo<ContentVo> getContent(Integer p, Integer limit);
+    PageInfo<ContentVo> getContent(Integer p, Integer limit);
+
+    /**
+     * @Description :根据cid或者slug获取指定文章
+     * @Date : 17:28 2018/7/13
+     * @Param [cid:文章标识]
+     * @return 
+     **/
+    ContentVo getContent(String cid);
 }

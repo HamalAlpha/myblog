@@ -24,7 +24,14 @@ public class BaseController {
     /**
      * @Description : 分页标题控制
      **/
-    protected  void title(HttpServletRequest request,String title){
-        request.setAttribute("title",title);
+    protected void title(HttpServletRequest request, String title) {
+        request.setAttribute("title", title);
+    }
+
+    /**
+     * @Description : 404页面返回
+     **/
+    protected String page404() {
+        return "common/404_page";
     }
 }

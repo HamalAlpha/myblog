@@ -70,6 +70,10 @@
     <sql id="Blob_Column_List">
         content
     </sql>
+
+    <!--
+        SELECT
+    -->
     <!--根据模板查找文章-->
     <select id="selectByExampleWithBLOBs" parameterType="top.arieslee.myblog.modal.VO.ContentVoExample"
             resultMap="baseResultMapWithBLOBs">
@@ -89,5 +93,36 @@
             order by ${orderByClause}
         </if>
     </select>
+    <!--根据cid查找content-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="baseResultMapWithBLOBs">
+        select 
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        from t_contents
+        where cid=#{cid,jdbcType=INTEGER}
+    </select>
 
+    <!--
+        UPDATE
+    -->
+    <!--根据cid值更新-->
+    <update id="updateByPrimaryKey" parameterType="top.arieslee.myblog.modal.VO.ContentVo" >
+        update t_contents
+        set title = #{title,jdbcType=VARCHAR},
+        slug = #{slug,jdbcType=VARCHAR},
+        created = #{created,jdbcType=INTEGER},
+        modified = #{modified,jdbcType=INTEGER},
+        author_id = #{authorId,jdbcType=INTEGER},
+        type = #{type,jdbcType=VARCHAR},
+        status = #{status,jdbcType=VARCHAR},
+        tags = #{tags,jdbcType=VARCHAR},
+        categories = #{categories,jdbcType=VARCHAR},
+        hits = #{hits,jdbcType=INTEGER},
+        comments_num = #{commentsNum,jdbcType=INTEGER},
+        allow_comment = #{allowComment,jdbcType=BIT},
+        allow_ping = #{allowPing,jdbcType=BIT},
+        allow_feed = #{allowFeed,jdbcType=BIT}
+        where cid = #{cid,jdbcType=INTEGER}
+    </update>
 </mapper>
