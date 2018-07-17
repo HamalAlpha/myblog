@@ -5,13 +5,13 @@ import top.arieslee.myblog.exception.TipException;
 import top.arieslee.myblog.modal.VO.ContentVo;
 
 /**
- * @ClassName ContentService
+ * @ClassName IContentService
  * @Description ContentService业务层接口
  * @Author Aries
  * @Date 2018/7/10 15:57
  * @Version 1.0
  **/
-public interface ContentService {
+public interface IContentService {
     
     /**
      * @Description : 获取分页列表

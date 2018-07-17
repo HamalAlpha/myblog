@@ -1,6 +1,7 @@
 package top.arieslee.myblog.controller;
 
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.arieslee.myblog.constant.WebConstant;
+import top.arieslee.myblog.modal.BO.CommentBo;
+import top.arieslee.myblog.modal.VO.CommentVo;
 import top.arieslee.myblog.modal.VO.ContentVo;
-import top.arieslee.myblog.service.ContentService;
+import top.arieslee.myblog.service.ICommentService;
+import top.arieslee.myblog.service.IContentService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,7 +32,10 @@ public class IndexController extends BaseController {
 
     //注入相关业务层接口
     @Autowired
-    private ContentService contentService;
+    private IContentService contentService;
+
+    @Autowired
+    private ICommentService commentService;
 
     /**
      * @Author: Aries
@@ -48,7 +55,7 @@ public class IndexController extends BaseController {
      * @Date : 16:57 2018/7/10
      * @Param [request, p:当前页码, limit:每页文章数量]
      **/
-    @GetMapping(value = "page/{p}")
+    @GetMapping(value = {"page/{p}","page/{p}.html"})
     public String index(HttpServletRequest request, @PathVariable("p") int p, @RequestParam(value = "limit", defaultValue = "1") int limit) {
         //判断页码是否合法,不合法置为1
         p = p < 1 || p > WebConstant.MAX_PAGE ? 1 : p;
@@ -59,24 +66,44 @@ public class IndexController extends BaseController {
         return super.rend("index");
     }
 
-
-    @GetMapping(value = "article/{cid}")
     /**
      * @Description : 根据文章id或者文章slug获取文章
      * @Date : 17:05 2018/7/13
      * @Param [request, cid]
      * @return java.lang.String
      **/
+    @GetMapping(value = "article/{cid}")
     public String getArticle(HttpServletRequest request,@PathVariable("cid") String cid){
         //调用业务层接口处理
         ContentVo contentVo=contentService.getContent(cid);
-        //文章不存在或者文章非公开转发到404页面
+        //文章不存在或者文章保存为草稿，转发到404页面
         if(contentVo==null||contentVo.getStatus().equals("draft")){
             return super.page404();
         }
-        //设置页面属性
+        //设置文章属性
         request.setAttribute("article",contentVo);
+        //设置评论组件
+        commentSet(request,contentVo);
         //页面跳转
         return super.rend("page");
+    }
+
+    /**
+     * @Description : 配置评论组件
+     **/
+    public void commentSet(HttpServletRequest request,ContentVo contentVo){
+        //文章允许评论
+        if(contentVo.getAllowComment()){
+            //获取到当前页
+            String cp=request.getParameter("cp");
+            if(StringUtils.isBlank(cp)){
+                cp="1";
+            }
+            //返回当前页数
+            request.setAttribute("cp",cp);
+            //执行评论分页查询
+            PageInfo<CommentBo> pageInfo=commentService.getComment(Integer.valueOf(contentVo.getCid()),Integer.valueOf(cp),6);
+            request.setAttribute("comments",pageInfo);
+        }
     }
 }

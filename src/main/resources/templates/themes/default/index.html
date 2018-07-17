@@ -34,5 +34,22 @@
     <!--</div>-->
 </div>
 </body>
+<script >
+window.onload=function () {
+    $.ajax({
+        type: 'GET',
+        url: 'page/1',
+        data: {"id":"id"},
+        dataType: 'json',
+        contentType:"application/x-www-form-urlencoded ",
+        success: function (result) {
+            alert("ok");
+        },
+        error: function () {
+            //
+        }
+    });
+}
+</script>
 <!--<div th:replace="themes/default/baseFrame/footer::footer"></div>-->
 </html>
