@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--注意命名空间映射-->
 <mapper namespace="top.arieslee.myblog.dao.CommentVoDao">
-    <resultMap id="BaseResultMap" type="top.arieslee.myblog.modal.Vo.CommentVo">
+    <resultMap id="BaseResultMap" type="top.arieslee.myblog.modal.VO.CommentVo">
         <id column="coid" jdbcType="INTEGER" property="coid"/>
         <result column="cid" jdbcType="INTEGER" property="cid"/>
         <result column="created" jdbcType="INTEGER" property="created"/>
@@ -17,7 +17,7 @@
         <result column="status" jdbcType="VARCHAR" property="status"/>
         <result column="parent" jdbcType="INTEGER" property="parent"/>
     </resultMap>
-    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.arieslee.myblog.modal.Vo.CommentVo">
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.arieslee.myblog.modal.VO.CommentVo">
         <result column="content" jdbcType="LONGVARCHAR" property="content"/>
     </resultMap>
     <sql id="Example_Where_Clause">
@@ -53,11 +53,11 @@
     <sql id="Base_Column_List">
     coid, cid, created, author, author_id, owner_id, mail, url, ip, agent, type, status,
     parent
-  </sql>
+    </sql>
     <sql id="Blob_Column_List">
     content
-  </sql>
-    <select id="selectByExampleWithBLOBs" parameterType="com.my.blog.website.modal.Vo.CommentVoExample"
+    </sql>
+    <select id="selectByExampleWithBLOBs" parameterType="top.arieslee.myblog.modal.VO.CommentVoExample"
             resultMap="ResultMapWithBLOBs">
         select
         <if test="distinct">
@@ -74,4 +74,6 @@
             order by ${orderByClause}
         </if>
     </select>
+
+
 </mapper>
