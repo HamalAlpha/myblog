@@ -32,7 +32,7 @@ public class IndexControllerTest {
 
     @Test
     public void getArticleByCid() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/article/5")).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/article/6")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test

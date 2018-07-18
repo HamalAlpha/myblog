@@ -12,7 +12,7 @@ import top.arieslee.myblog.dto.Types;
 import top.arieslee.myblog.exception.TipException;
 import top.arieslee.myblog.modal.VO.ContentVo;
 import top.arieslee.myblog.modal.VO.ContentVoExample;
-import top.arieslee.myblog.service.ContentService;
+import top.arieslee.myblog.service.IContentService;
 import top.arieslee.myblog.utils.Tools;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
  * @Version 1.0
  **/
 @Service
-public class ContentServiceImpl implements ContentService {
+public class ContentServiceImpl implements IContentService {
     //log日志对象
     private static final Logger LOGGER=LoggerFactory.getLogger(ContentServiceImpl.class);
 
