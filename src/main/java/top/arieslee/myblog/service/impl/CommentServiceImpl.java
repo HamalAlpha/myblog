@@ -5,7 +5,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.arieslee.myblog.dao.CommentVoDao;
-import top.arieslee.myblog.modal.BO.CommentBo;
+import top.arieslee.myblog.dto.CommentDto;
 import top.arieslee.myblog.modal.VO.CommentVo;
 import top.arieslee.myblog.modal.VO.CommentVoExample;
 import top.arieslee.myblog.service.ICommentService;
@@ -27,7 +27,7 @@ public class CommentServiceImpl implements ICommentService {
     private CommentVoDao commentVoDao;
 
     @Override
-    public PageInfo<CommentBo> getComment(Integer cid, Integer pageNum, Integer limit) {
+    public PageInfo<CommentDto> getComment(Integer cid, Integer pageNum, Integer limit) {
         //当前线程绑定分页模板
         PageHelper.startPage(pageNum,limit);
         //构造Comment表查询模板
@@ -37,12 +37,12 @@ public class CommentServiceImpl implements ICommentService {
         List<CommentVo> parentComments=commentVoDao.selectByExampleWithBLOBs(example);
         PageInfo<CommentVo> voPageInfo = new PageInfo<>(parentComments);
         //构造评论业务对象
-        PageInfo<CommentBo> boPageInfo = copyPageInfo(voPageInfo);
+        PageInfo<CommentDto> boPageInfo = copyPageInfo(voPageInfo);
         if(parentComments.size()!=0){
-            List<CommentBo> bos=new ArrayList<>();
+            List<CommentDto> bos=new ArrayList<>();
             parentComments.forEach(parentComment->{
-                CommentBo commentBo=new CommentBo(parentComment);
-                bos.add(commentBo);
+                CommentDto commentDto =new CommentDto(parentComment);
+                bos.add(commentDto);
             });
             boPageInfo.setList(bos);
         }

@@ -8,13 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import top.arieslee.myblog.constant.ErrorMsg;
+import top.arieslee.myblog.constant.Types;
 import top.arieslee.myblog.constant.WebConstant;
+import top.arieslee.myblog.dto.ResponseDto;
 import top.arieslee.myblog.exception.TipException;
-import top.arieslee.myblog.modal.BO.CommentBo;
-import top.arieslee.myblog.modal.VO.CommentVo;
+import top.arieslee.myblog.dto.CommentDto;
 import top.arieslee.myblog.modal.VO.ContentVo;
 import top.arieslee.myblog.service.ICommentService;
 import top.arieslee.myblog.service.IContentService;
+import top.arieslee.myblog.utils.PatternKit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -103,7 +106,7 @@ public class IndexController extends BaseController {
             //返回当前页数
             request.setAttribute("cp", cp);
             //执行评论分页查询
-            PageInfo<CommentBo> pageInfo = commentService.getComment(Integer.valueOf(contentVo.getCid()), Integer.valueOf(cp), 6);
+            PageInfo<CommentDto> pageInfo = commentService.getComment(Integer.valueOf(contentVo.getCid()), Integer.valueOf(cp), 6);
             request.setAttribute("comments", pageInfo);
         }
     }
@@ -114,10 +117,44 @@ public class IndexController extends BaseController {
     @PostMapping("comment")
     @ResponseBody
     @Transactional(rollbackFor = TipException.class)
-    public void publishComment(HttpServletRequest request, HttpServletResponse response,
+    public ResponseDto publishComment(HttpServletRequest request, HttpServletResponse response,
                                @RequestParam Integer cid, @RequestParam Integer coid,
                                @RequestParam String author, @RequestParam String mail,
                                @RequestParam String url, @RequestParam String text, @RequestParam String _csrf_token) {
+        //验证请求中Referer和_csrf_token是否存在，此处可以利用正则表达式拦截外链
+        String str=request.getHeader("Referer");
+        if(StringUtils.isBlank(str)||StringUtils.isBlank(_csrf_token)){
+            return ResponseDto.fail(ErrorMsg.BAD_REQUEST);
+        }
 
+        //验证token是否存在缓存池中
+        String token=cachePool.get(Types.CSRF_TOKEN.getType(),_csrf_token);
+        if(StringUtils.isBlank(token)){
+            return ResponseDto.fail(ErrorMsg.BAD_REQUEST);
+        }
+
+        if(StringUtils.isBlank(text)){
+            return ResponseDto.fail("评论不能为空的哦~~");
+        }
+
+        if(StringUtils.isNotBlank(author)&&author.length()>50){
+            return ResponseDto.fail("国外名字也没你那么长");
+        }
+
+        if(StringUtils.isNotBlank(mail)&&!PatternKit.isEmail(mail)){
+            return ResponseDto.fail("你想发送邮件到火星么？");
+        }
+
+        if(StringUtils.isNotBlank(url)&&!PatternKit.isURL(url)){
+            return ResponseDto.fail("伏地魔");
+        }
+
+        if(text.length()>200){
+            return ResponseDto.fail("评论字数不超过200，好么？");
+        }
+
+        //限制评论间隔
+
+        return null;
     }
 }

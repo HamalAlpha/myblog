@@ -1,23 +1,23 @@
-package top.arieslee.myblog.modal.BO;
+package top.arieslee.myblog.dto;
 
 import top.arieslee.myblog.modal.VO.CommentVo;
 
 import java.util.List;
 
 /**
- * @ClassName CommentBo
+ * @ClassName CommentDto
  * @Description 评论业务对象，包括父子评论
  * @Author Aries
  * @Date 2018/7/17 15:44
  * @Version 1.0
  **/
-public class CommentBo extends CommentVo{
+public class CommentDto extends CommentVo{
     //层级
     private int levels;
     //子评论集
     private List<CommentVo> childCommentVos;
 
-    public CommentBo(CommentVo comments){
+    public CommentDto(CommentVo comments){
         setAuthor(comments.getAuthor());
         setMail(comments.getMail());
         setCoid(comments.getCoid());

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.arieslee.myblog.dao.ContentVoDao;
-import top.arieslee.myblog.dto.Types;
+import top.arieslee.myblog.constant.Types;
 import top.arieslee.myblog.exception.TipException;
 import top.arieslee.myblog.modal.VO.ContentVo;
 import top.arieslee.myblog.modal.VO.ContentVoExample;

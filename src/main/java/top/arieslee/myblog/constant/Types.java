@@ -1,4 +1,4 @@
-package top.arieslee.myblog.dto;
+package top.arieslee.myblog.constant;
 
 /**
  * @ClassName Types
@@ -9,7 +9,9 @@ package top.arieslee.myblog.dto;
  **/
 public enum Types {
     PUBLISH("publish"),
-    ARTICLE("post");
+    ARTICLE("post"),
+    CSRF_TOKEN("csrf_token"),
+    COMMENT_FREQUENCY("comment_frequency");
 
     private String type;
 
