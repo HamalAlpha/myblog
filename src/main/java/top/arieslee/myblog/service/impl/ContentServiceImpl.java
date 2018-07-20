@@ -13,6 +13,7 @@ import top.arieslee.myblog.exception.TipException;
 import top.arieslee.myblog.modal.VO.ContentVo;
 import top.arieslee.myblog.modal.VO.ContentVoExample;
 import top.arieslee.myblog.service.IContentService;
+import top.arieslee.myblog.utils.PatternKit;
 import top.arieslee.myblog.utils.Tools;
 
 import java.util.List;
@@ -57,7 +58,7 @@ public class ContentServiceImpl implements IContentService {
         LOGGER.debug("Enter the getContent(String cid) method");
         if(StringUtils.isNotBlank(cid)){
             //两种情况：按照cid查找和按照slug查找
-            if(Tools.isNum(cid)){
+            if(PatternKit.isNum(cid)){
                 ContentVo contentVo = contentVoDao.selectByPrimaryKey(Integer.valueOf(cid));
                 if(contentVo!=null){
                     contentVo.setHits(contentVo.getHits()+1);

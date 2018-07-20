@@ -1,6 +1,7 @@
 package top.arieslee.myblog.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.vdurmont.emoji.EmojiParser;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +15,15 @@ import top.arieslee.myblog.constant.WebConstant;
 import top.arieslee.myblog.dto.ResponseDto;
 import top.arieslee.myblog.exception.TipException;
 import top.arieslee.myblog.dto.CommentDto;
+import top.arieslee.myblog.modal.VO.CommentVo;
 import top.arieslee.myblog.modal.VO.ContentVo;
 import top.arieslee.myblog.service.ICommentService;
 import top.arieslee.myblog.service.IContentService;
+import top.arieslee.myblog.utils.IPKit;
 import top.arieslee.myblog.utils.PatternKit;
+import top.arieslee.myblog.utils.Tools;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -133,28 +138,80 @@ public class IndexController extends BaseController {
             return ResponseDto.fail(ErrorMsg.BAD_REQUEST);
         }
 
+        //验证表单信息
         if(StringUtils.isBlank(text)){
             return ResponseDto.fail("评论不能为空的哦~~");
         }
-
         if(StringUtils.isNotBlank(author)&&author.length()>50){
             return ResponseDto.fail("国外名字也没你那么长");
         }
-
         if(StringUtils.isNotBlank(mail)&&!PatternKit.isEmail(mail)){
             return ResponseDto.fail("你想发送邮件到火星么？");
         }
-
         if(StringUtils.isNotBlank(url)&&!PatternKit.isURL(url)){
-            return ResponseDto.fail("伏地魔");
+            return ResponseDto.fail("你应该是个伏地魔");
+        }
+        if(text.length()>2000){
+            return ResponseDto.fail("评论字数不超过2000，好么？");
         }
 
-        if(text.length()>200){
-            return ResponseDto.fail("评论字数不超过200，好么？");
+        //获取IP地址
+        String ip=IPKit.getIPAddrByRequest(request);
+        //从缓存池中获取评论缓存
+        Integer count=cachePool.get(Types.COMMENT_FREQUENCY.getType(),ip,cid.toString());
+        if(count==null||count>0){
+            return ResponseDto.fail("加藤鹰之手？");
         }
 
-        //限制评论间隔
+        //过滤敏感字符，防止XSS注入攻击
+        author=Tools.cleanXSS(author);
+        text=Tools.cleanXSS(text);
 
+        //过滤emoji字符
+        author = EmojiParser.parseToAliases(author);
+        text = EmojiParser.parseToAliases(text);
+
+        //构造评论实例
+        CommentVo commentVo=new CommentVo();
+        commentVo.setCid(cid);
+        commentVo.setParent(coid);//父评论
+        commentVo.setAuthor(author);
+        commentVo.setMail(mail);
+        commentVo.setIp(ip);
+        commentVo.setUrl(url);
+        commentVo.setContent(text);
+
+        try {
+            commentService.insertComment(commentVo);
+            //添加cookie
+            setCookie("comment_user_name",commentVo.getAuthor(),1*24*60*60,response);
+            setCookie("comment_user_mail",commentVo.getMail(),1*24*60*60,response);
+            setCookie("comment_user_url",commentVo.getUrl(),1*24*60*60,response);
+            //设置评论频率缓存
+            cachePool.set(Types.COMMENT_FREQUENCY.getType(),1,60,ip,cid.toString());
+            //返回成功结果
+        }catch (Exception e){
+            String msg="评论失败";
+            if(e instanceof TipException){
+                msg=e.getMessage();
+            }else{
+                LOGGER.error(msg,e);
+            }
+            return ResponseDto.fail(msg);
+        }
         return null;
+    }
+
+
+    /**
+     * @Description 为用户添加cookie值
+     * @Param [key：键, value：值, maxAge：有效期, response：响应对象]
+     * @return void
+     **/
+    public void setCookie(String key,String value,int maxAge,HttpServletResponse response){
+        Cookie cookie=new Cookie(key,value);
+        cookie.setMaxAge(maxAge);
+        cookie.setSecure(false);//表示可用于http和https传回cookie
+        response.addCookie(cookie);
     }
 }

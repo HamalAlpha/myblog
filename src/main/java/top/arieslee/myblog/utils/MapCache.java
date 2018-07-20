@@ -29,6 +29,14 @@ public class MapCache {
         this.cachePool = new ConcurrentHashMap<>(MAX_CACHE_COUNT);
     }
 
+    //获取hash缓存
+    public <T> T get(String key, String... fields) {
+        for(String field:fields){
+            key=key+":"+field;
+        }
+        return this.get(key);
+    }
+
     //获取普通缓存
     public <T> T get(String key) {
         CacheObject cacheObject = cachePool.get(key);
@@ -44,12 +52,6 @@ public class MapCache {
             }
         }
         return null;
-    }
-
-    //获取hash缓存
-    public <T> T get(String key, String field) {
-        key = key + ":" + field;
-        return this.get(key);
     }
 
     /**
@@ -71,19 +73,21 @@ public class MapCache {
     /**
      * @return void
      * @Description 建立普通Hash缓存
-     * @Param [key：Hash键, field：Hash值, value：缓存值]
+     * @Param [key：键, fields：参数集, value：缓存值]
      **/
-    public void set(String key, String field, Object value) {
-        this.set(key, field, value, -1);
+    public void set(String key, Object value, String... fields) {
+        this.set(key, value, -1, fields);
     }
 
     /**
      * @return void
-     * @Description 建立带过期时间的Hash缓存
-     * @Param [key：Hash键, field：Hash值, value：缓存值, expired：过期时间]
+     * @Description 建立带过期时间的含参缓存
+     * @Param [key：Hash键, fields：Hash值, value：缓存值, expired：过期时间]
      **/
-    public void set(String key, String field, Object value, long expired) {
-        key = key + ":" + field;
+    public void set(String key, Object value, long expired, String... fields) {
+        for(String field:fields){
+            key=key+":"+field;
+        }
         expired = expired >= 0 ? System.currentTimeMillis() / 1000 + expired : expired;
         CacheObject cacheObject = new CacheObject(key, value, expired);
         cachePool.put(key, cacheObject);

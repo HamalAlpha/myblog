@@ -10,12 +10,19 @@ package top.arieslee.myblog.utils;
 public class Tools {
 
     /**
-     * @Description : 判断字符串是否包含有效数字
-     **/
-    public static boolean isNum(String str) {
-        if (str != null && str.trim().length() != 0 && str.matches("\\d*")) {
-            return true;
-        }
-        return false;
+     * 替换HTML脚本，防止XSS注入
+     *
+     * @param value
+     * @return
+     */
+    public static String cleanXSS(String value) {
+        //You'll need to remove the spaces from the html entities below
+        value = value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
+        value = value.replaceAll("'", "&#39;");
+        value = value.replaceAll("eval\\((.*)\\)", "");
+        value = value.replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"");
+        value = value.replaceAll("script", "^-^");
+        return value;
     }
 }

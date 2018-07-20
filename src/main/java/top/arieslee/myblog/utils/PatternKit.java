@@ -31,4 +31,14 @@ public class PatternKit {
         String regex = "(https?://(w{3}\\.)?)?\\w+\\.\\w+(\\.[a-zA-Z]+)*(:\\d{1,5})?(/\\w*)*(\\??(.+=.*)?(&.+=.*)?)?";
         return Pattern.matches(regex, url);
     }
+
+    /**
+     * @Description : 验证是否有效数字
+     **/
+    public static boolean isNum(String str) {
+        if (str != null && str.trim().length() != 0 && str.matches("\\d*")) {
+            return true;
+        }
+        return false;
+    }
 }

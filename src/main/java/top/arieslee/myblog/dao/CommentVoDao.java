@@ -25,4 +25,10 @@ public interface CommentVoDao {
      * @return
      **/
     List<CommentVo> selectByExampleWithBLOBs(CommentVoExample example);
+
+    /**
+     * @Description 插入评论
+     * @return void
+     **/
+    void insertComment(CommentVo commentVo);
 }
