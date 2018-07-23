@@ -37,19 +37,19 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public PageInfo<CommentDto> getComment(Integer cid, Integer pageNum, Integer limit) {
         //当前线程绑定分页模板
-        PageHelper.startPage(pageNum,limit);
+        PageHelper.startPage(pageNum, limit);
         //构造Comment表查询模板
-        CommentVoExample example=new CommentVoExample();
+        CommentVoExample example = new CommentVoExample();
         example.createCriteria().andCidEqualTo(cid).andParentEqualTo(0);
         example.setOrderByClause("coid desc");
-        List<CommentVo> parentComments=commentVoDao.selectByExampleWithBLOBs(example);
+        List<CommentVo> parentComments = commentVoDao.selectByExampleWithBLOBs(example);
         PageInfo<CommentVo> voPageInfo = new PageInfo<>(parentComments);
         //构造评论业务对象
         PageInfo<CommentDto> boPageInfo = copyPageInfo(voPageInfo);
-        if(parentComments.size()!=0){
-            List<CommentDto> bos=new ArrayList<>();
-            parentComments.forEach(parentComment->{
-                CommentDto commentDto =new CommentDto(parentComment);
+        if (parentComments.size() != 0) {
+            List<CommentDto> bos = new ArrayList<>();
+            parentComments.forEach(parentComment -> {
+                CommentDto commentDto = new CommentDto(parentComment);
                 bos.add(commentDto);
             });
             boPageInfo.setList(bos);
@@ -59,48 +59,47 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public void insertComment(CommentVo commentVo) {
-        if(commentVo==null){
+        if (commentVo == null) {
             throw new TipException("评论对象为空");
         }
-        if(StringUtils.isBlank(commentVo.getAuthor())){
-            commentVo.setAuthor("Enjoy");
+        if (StringUtils.isBlank(commentVo.getAuthor())) {
+            commentVo.setAuthor("(╯▽╰)");
         }
-        if(StringUtils.isNotBlank(commentVo.getMail())&&!PatternKit.isEmail(commentVo.getMail())){
+        if (StringUtils.isNotBlank(commentVo.getMail()) && !PatternKit.isEmail(commentVo.getMail())) {
             throw new TipException("请输入正确的邮箱格式");
         }
-        if(StringUtils.isBlank(commentVo.getContent())){
+        if (StringUtils.isBlank(commentVo.getContent())) {
             throw new TipException("评论不能为空");
         }
-        if(commentVo.getContent().length()<5||commentVo.getContent().length()>2000){
+        if (commentVo.getContent().length() < 5 || commentVo.getContent().length() > 2000) {
             throw new TipException("评论字数请控制在5到2000之间");
         }
-        if(commentVo.getCid()==null){
+        if (commentVo.getCid() == null) {
             throw new TipException("评论文章不能为空");
         }
-        ContentVo contentVo=contentVoDao.selectByPrimaryKey(commentVo.getCid());
-        if(contentVo==null){
+        ContentVo contentVo = contentVoDao.selectByPrimaryKey(commentVo.getCid());
+        if (contentVo == null) {
             throw new TipException("评论文章不存在");
         }
 
         //补充默认字段
         commentVo.setOwnerId(contentVo.getCid());//评论归属文章id
-        commentVo.setCreated((int)System.currentTimeMillis()/1000);//评论创建时间
-        //执行插入
+        commentVo.setCreated((int) (System.currentTimeMillis() / 1000));//评论创建时间
+        //执行插入操作
         commentVoDao.insertComment(commentVo);
-
-        contentVo.setCommentsNum(contentVo.getCommentsNum()+1);
-        //执行更新
+        //更新评论数
+        contentVo.setCommentsNum(contentVo.getCommentsNum() + 1);
         contentVoDao.updateByPrimaryKey(contentVo);
 
     }
 
     /**
+     * @return com.github.pagehelper.PageInfo<T>
      * @Description 赋值分页插件的基本属性
      * @Param [origin]
-     * @return com.github.pagehelper.PageInfo<T>
      **/
-    public <T> PageInfo<T> copyPageInfo(PageInfo ordinal){
-        PageInfo<T> returnBo=new PageInfo<>();
+    public <T> PageInfo<T> copyPageInfo(PageInfo ordinal) {
+        PageInfo<T> returnBo = new PageInfo<>();
         returnBo.setPageSize(ordinal.getPageSize());
         returnBo.setPageNum(ordinal.getPageNum());
         returnBo.setEndRow(ordinal.getEndRow());

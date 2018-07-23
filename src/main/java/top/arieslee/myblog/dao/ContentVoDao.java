@@ -1,5 +1,6 @@
 package top.arieslee.myblog.dao;
 
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Component;
 import top.arieslee.myblog.modal.VO.ContentVo;
 import top.arieslee.myblog.modal.VO.ContentVoExample;
@@ -32,4 +33,9 @@ public interface ContentVoDao {
      * @Description : 根据cid更新文章数据
      **/
     void updateByPrimaryKey(ContentVo contentVo);
+
+    /**
+     * @Description 根据分类获取文章
+     **/
+    List<ContentVo> findByMid(Integer mid);
 }

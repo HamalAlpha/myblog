@@ -11,7 +11,8 @@ public enum Types {
     PUBLISH("publish"),
     ARTICLE("post"),
     CSRF_TOKEN("csrf_token"),
-    COMMENT_FREQUENCY("comment_frequency");
+    COMMENT_FREQUENCY("comment_frequency"),
+    CATEGORY("category");
 
     private String type;
 

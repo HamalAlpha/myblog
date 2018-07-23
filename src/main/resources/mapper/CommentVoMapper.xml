@@ -14,7 +14,7 @@
         <result column="ip" jdbcType="VARCHAR" property="ip"/>
         <result column="agent" jdbcType="VARCHAR" property="agent"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
-        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="success" jdbcType="VARCHAR" property="success"/>
         <result column="parent" jdbcType="INTEGER" property="parent"/>
     </resultMap>
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.arieslee.myblog.modal.VO.CommentVo">
@@ -51,7 +51,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    coid, cid, created, author, author_id, owner_id, mail, url, ip, agent, type, status,
+    coid, cid, created, author, author_id, owner_id, mail, url, ip, agent, type,
     parent
     </sql>
     <sql id="Blob_Column_List">
@@ -75,5 +75,17 @@
         </if>
     </select>
 
-
+    <insert id="insertComment" parameterType="top.arieslee.myblog.modal.VO.CommentVo" useGeneratedKeys="true"
+            keyProperty="coid">
+    insert into t_comments (coid, cid, created,
+      author, author_id, owner_id,
+      mail, url, ip, agent,
+      type, status, parent,
+      content)
+    values (#{coid,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, #{created,jdbcType=INTEGER},
+      #{author,jdbcType=VARCHAR}, #{authorId,jdbcType=INTEGER}, #{ownerId,jdbcType=INTEGER},
+      #{mail,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{agent,jdbcType=VARCHAR},
+      #{type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{parent,jdbcType=INTEGER},
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
 </mapper>

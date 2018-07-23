@@ -31,8 +31,8 @@ public class MapCache {
 
     //获取hash缓存
     public <T> T get(String key, String... fields) {
-        for(String field:fields){
-            key=key+":"+field;
+        for (String field : fields) {
+            key = key + ":" + field;
         }
         return this.get(key);
     }
@@ -41,7 +41,7 @@ public class MapCache {
     public <T> T get(String key) {
         CacheObject cacheObject = cachePool.get(key);
         if (cacheObject != null) {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = System.currentTimeMillis() / 1000;
             //检验缓存是否过期
             if (cacheObject.getExpired() < 0 || cacheObject.getExpired() > currentTime) {
                 //缓存在期限内
@@ -85,8 +85,8 @@ public class MapCache {
      * @Param [key：Hash键, fields：Hash值, value：缓存值, expired：过期时间]
      **/
     public void set(String key, Object value, long expired, String... fields) {
-        for(String field:fields){
-            key=key+":"+field;
+        for (String field : fields) {
+            key = key + ":" + field;
         }
         expired = expired >= 0 ? System.currentTimeMillis() / 1000 + expired : expired;
         CacheObject cacheObject = new CacheObject(key, value, expired);

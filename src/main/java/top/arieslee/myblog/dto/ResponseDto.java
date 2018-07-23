@@ -11,7 +11,7 @@ public class ResponseDto<T> {
     /**
      * @Description 响应状态
      **/
-    private boolean status;
+    private boolean success;
 
     /**
      * @Description 状态码
@@ -28,12 +28,52 @@ public class ResponseDto<T> {
      **/
     private String message;
 
-    public ResponseDto(boolean status, String message) {
-        this.status = status;
+    public ResponseDto(boolean success, String message) {
+        this.success = success;
         this.message = message;
+    }
+
+    public ResponseDto(boolean success) {
+        this.success = success;
     }
 
     public static ResponseDto fail(String msg){
         return new ResponseDto(false,msg);
+    }
+
+    public static ResponseDto ok(){
+        return new ResponseDto(true);
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

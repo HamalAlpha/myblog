@@ -12,7 +12,7 @@
         <result column="modified" jdbcType="INTEGER" property="modified"/>
         <result column="author_id" jdbcType="INTEGER" property="authorId"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
-        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="success" jdbcType="VARCHAR" property="success"/>
         <result column="tags" jdbcType="VARCHAR" property="tags"/>
         <result column="categories" jdbcType="VARCHAR" property="categories"/>
         <result column="hits" jdbcType="INTEGER" property="hits"/>
@@ -63,7 +63,7 @@
 
     <!--基本字段-->
     <sql id="Base_Column_List">
-        cid, title, slug, created, modified, author_id, type, status, tags, categories, hits,
+        cid, title, slug, created, modified, author_id, type, tags, categories, hits,
         comments_num, allow_comment, allow_ping, allow_feed
     </sql>
     <!--文章字段-->
@@ -103,6 +103,12 @@
         where cid=#{cid,jdbcType=INTEGER}
     </select>
 
+    <!--根据分类获取文章列表-->
+    <select id="findByMid" parameterType="java.lang.Integer" resultMap="baseResultMapWithBLOBs">
+        select content.*
+        from t_contents as content left join `t_relationships` as relationship on content.cid=relationship.cid
+        where content.status='publish' and content.type='post' and relationship.mid=#{mid}
+    </select>
     <!--
         UPDATE
     -->
@@ -115,7 +121,6 @@
         modified = #{modified,jdbcType=INTEGER},
         author_id = #{authorId,jdbcType=INTEGER},
         type = #{type,jdbcType=VARCHAR},
-        status = #{status,jdbcType=VARCHAR},
         tags = #{tags,jdbcType=VARCHAR},
         categories = #{categories,jdbcType=VARCHAR},
         hits = #{hits,jdbcType=INTEGER},
