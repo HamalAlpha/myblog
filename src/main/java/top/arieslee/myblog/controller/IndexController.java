@@ -19,6 +19,7 @@ import top.arieslee.myblog.exception.TipException;
 import top.arieslee.myblog.dto.CommentDto;
 import top.arieslee.myblog.modal.VO.CommentVo;
 import top.arieslee.myblog.modal.VO.ContentVo;
+import top.arieslee.myblog.modal.VO.MetaVo;
 import top.arieslee.myblog.service.ICommentService;
 import top.arieslee.myblog.service.IContentService;
 import top.arieslee.myblog.service.IMetaService;
@@ -225,33 +226,45 @@ public class IndexController extends BaseController {
     @GetMapping("category/{keyword}/{page}")
     public String categories(HttpServletRequest request, @PathVariable("keyword") String keyword, @PathVariable("page") int page, @RequestParam(value = "limit", defaultValue = "1") int limit) {
         page = page <= 0 || page > WebConstant.MAX_PAGE ? 1 : page;
-        MetaDto metaDto=metaService.getMetaCount(Types.CATEGORY.getType(),keyword);
+        MetaDto metaDto = metaService.getMetaCount(Types.CATEGORY.getType(), keyword);
         //没有找到关键字分类信息，返回404页面
-        if(metaDto==null){
+        if (metaDto == null) {
             return super.page404();
         }
 
         //查找分类下的归档页
-        PageInfo<ContentVo> contentsPaginator=contentService.getArticles(metaDto.getMid(),page,limit);
+        PageInfo<ContentVo> contentsPaginator = contentService.getArticles(metaDto.getMid(), page, limit);
 
         //设置页面参数
-        request.setAttribute("articles",contentsPaginator);
-        request.setAttribute("type","分类");
-        request.setAttribute("meta",metaDto);
+        request.setAttribute("articles", contentsPaginator);
+        request.setAttribute("type", "分类");
+        request.setAttribute("meta", metaDto);
 
         return super.rend("page_category");
     }
 
     /**
+     * @return java.lang.String
      * @Description 归档页
      * @Param [request]
-     * @return java.lang.String
      **/
     @GetMapping("archive")
-    public String archives(HttpServletRequest request){
-        List<ArchiveDto> achives=iSiteService.getArchives();
-        request.setAttribute("achives",achives);
+    public String archives(HttpServletRequest request) {
+        List<ArchiveDto> achives = iSiteService.getArchives();
+        request.setAttribute("achives", achives);
         return super.rend("archives");
+    }
+
+    /**
+     * @return java.lang.String
+     * @Description 友链页
+     * @Param [request]
+     **/
+    @GetMapping("link")
+    public String link(HttpServletRequest request) {
+        List<MetaVo> links=metaService.getLinks(Types.LINK.getType());
+        request.setAttribute("links",links);
+        return super.rend("link");
     }
 
     /**

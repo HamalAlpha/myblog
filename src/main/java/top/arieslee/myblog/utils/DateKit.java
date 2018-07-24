@@ -49,7 +49,7 @@ public class DateKit {
 
     /**
      * @return java.util.Date
-     * @Description 在原有时间上增加
+     * @Description 在原有时间上增加一段时间，这里待改进，没有考虑每月不一定为30天的情况
      * @Param [interval 增加幅度：年、月等, date 原时间, n 增加数量]
      **/
     public static Date dateAdd(int interval, Date date, int n) {

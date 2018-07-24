@@ -79,6 +79,26 @@
       mid, name, slug, type, description, sort, parent
     </sql>
 
+    <select id="selectByExample" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_metas
+        <if test="_parameter!=null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause!=null">
+            order by ${orderByClause}
+        </if>
+        <if test="limit != null">
+            <if test="offset != null">
+                limit ${offset}, ${limit}
+            </if>
+            <if test="offset == null">
+                limit ${limit}
+            </if>
+        </if>
+    </select>
+
     <select id="selectByTypeAndName" resultMap="MetaDto">
         select meta.*,count(relationship.cid) as count
         from t_metas as meta left join `t_relationships` as relationship on meta.mid=relationship.mid
