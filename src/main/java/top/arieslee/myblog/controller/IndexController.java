@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import top.arieslee.myblog.constant.ErrorMsg;
 import top.arieslee.myblog.constant.Types;
 import top.arieslee.myblog.constant.WebConstant;
+import top.arieslee.myblog.dto.ArchiveDto;
 import top.arieslee.myblog.dto.MetaDto;
 import top.arieslee.myblog.dto.ResponseDto;
 import top.arieslee.myblog.exception.TipException;
@@ -21,6 +22,7 @@ import top.arieslee.myblog.modal.VO.ContentVo;
 import top.arieslee.myblog.service.ICommentService;
 import top.arieslee.myblog.service.IContentService;
 import top.arieslee.myblog.service.IMetaService;
+import top.arieslee.myblog.service.ISiteService;
 import top.arieslee.myblog.utils.IPKit;
 import top.arieslee.myblog.utils.PatternKit;
 import top.arieslee.myblog.utils.Tools;
@@ -28,6 +30,7 @@ import top.arieslee.myblog.utils.Tools;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @ClassName IndexController
@@ -50,6 +53,9 @@ public class IndexController extends BaseController {
 
     @Autowired
     private IMetaService metaService;
+
+    @Autowired
+    private ISiteService iSiteService;
 
     /**
      * @Author: Aries
@@ -212,12 +218,12 @@ public class IndexController extends BaseController {
      * @Description 分类页请求
      **/
     @GetMapping("category/{keyword}")
-    public String getCategories(HttpServletRequest request, @PathVariable("keyword") String keyword, @RequestParam(value = "limit", defaultValue = "1") int limit) {
-        return this.getCategories(request, keyword, 1, limit);
+    public String categories(HttpServletRequest request, @PathVariable("keyword") String keyword, @RequestParam(value = "limit", defaultValue = "1") int limit) {
+        return this.categories(request, keyword, 1, limit);
     }
 
     @GetMapping("category/{keyword}/{page}")
-    public String getCategories(HttpServletRequest request, @PathVariable("keyword") String keyword, @PathVariable("page") int page, @RequestParam(value = "limit", defaultValue = "1") int limit) {
+    public String categories(HttpServletRequest request, @PathVariable("keyword") String keyword, @PathVariable("page") int page, @RequestParam(value = "limit", defaultValue = "1") int limit) {
         page = page <= 0 || page > WebConstant.MAX_PAGE ? 1 : page;
         MetaDto metaDto=metaService.getMetaCount(Types.CATEGORY.getType(),keyword);
         //没有找到关键字分类信息，返回404页面
@@ -234,6 +240,18 @@ public class IndexController extends BaseController {
         request.setAttribute("meta",metaDto);
 
         return super.rend("page_category");
+    }
+
+    /**
+     * @Description 归档页
+     * @Param [request]
+     * @return java.lang.String
+     **/
+    @GetMapping("archive")
+    public String archives(HttpServletRequest request){
+        List<ArchiveDto> achives=iSiteService.getArchives();
+        request.setAttribute("achives",achives);
+        return super.rend("archives");
     }
 
     /**

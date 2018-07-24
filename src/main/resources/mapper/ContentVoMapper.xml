@@ -74,7 +74,7 @@
     <!--
         SELECT
     -->
-    <!--根据模板查找文章-->
+    <!--根据模板查找文章，包括文章内容-->
     <select id="selectByExampleWithBLOBs" parameterType="top.arieslee.myblog.modal.VO.ContentVoExample"
             resultMap="baseResultMapWithBLOBs">
         select
@@ -84,6 +84,23 @@
         <include refid="Base_Column_List"/>
         ,
         <include refid="Blob_Column_List"/>
+        from t_contents
+        <!-- _parameter是mybatis的内置属性，代表传入参数-->
+        <if test="_parameter !=null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause!=null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <!--根据模板查找文章，不包括文章内容-->
+    <select id="selectByExample" parameterType="top.arieslee.myblog.modal.VO.ContentVoExample"
+            resultMap="baseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
         from t_contents
         <!-- _parameter是mybatis的内置属性，代表传入参数-->
         <if test="_parameter !=null">
@@ -109,6 +126,19 @@
         from t_contents as content left join `t_relationships` as relationship on content.cid=relationship.cid
         where content.status='publish' and content.type='post' and relationship.mid=#{mid}
     </select>
+
+    <resultMap id="ArchiveDtoMap" type="top.arieslee.myblog.dto.ArchiveDto">
+        <id column="date" property="date" />
+        <result column="count" property="count" />
+    </resultMap>
+    <select id="findArchiveDtoByMonth" resultMap="ArchiveDtoMap">
+        select FROM_UNIXTIME(created,'%Y年%m月') as date,count(*) as count
+        from t_contents
+        where type='post' and status='publish'
+        group by date
+        order by created desc
+    </select>
+
     <!--
         UPDATE
     -->

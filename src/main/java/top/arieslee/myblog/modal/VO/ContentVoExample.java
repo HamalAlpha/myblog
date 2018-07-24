@@ -156,9 +156,22 @@ public class ContentVoExample {
             return (Criteria) this;
         }
 
+        /**
+         * @Description slug相等条件
+         **/
         public Criteria andSlugEqualTo(String value) {
             addCriterion("slug=", value, "slug");
             return (Criteria) this;
+        }
+
+        public Criteria andCreatedGreaderThan(Integer value) {
+            addCriterion("created >", value, "created");
+            return (Criteria)this;
+        }
+
+        public Criteria andCreatedLessThan(Integer value){
+            addCriterion("created <",value,"created");
+            return (Criteria)this;
         }
 
         /**
