@@ -74,7 +74,7 @@ public class ContentServiceImpl implements IContentService {
                 ContentVoExample example = new ContentVoExample();
                 example.createCriteria().andSlugEqualTo(cid);
                 List<ContentVo> contentVoList = contentVoDao.selectByExampleWithBLOBs(example);
-                if (contentVoList.size() != 1) {
+                if (contentVoList.size() >= 1) {
                     //slug冲突
                     throw new TipException("The Slug you selected is more than 1");
                 }
@@ -92,9 +92,9 @@ public class ContentServiceImpl implements IContentService {
         //获取文章总数
         int total = metaVoDao.countByMid(mid);
         //分页插件三部曲
-        PageHelper.startPage(page,limit);
-        List<ContentVo> contentVos=contentVoDao.findByMid(mid);
-        PageInfo<ContentVo> contentVoPageInfo=new PageInfo<>(contentVos);
+        PageHelper.startPage(page, limit);
+        List<ContentVo> contentVos = contentVoDao.findByMid(mid);
+        PageInfo<ContentVo> contentVoPageInfo = new PageInfo<>(contentVos);
         contentVoPageInfo.setTotal(total);
         return contentVoPageInfo;
     }

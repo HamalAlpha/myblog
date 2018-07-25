@@ -262,9 +262,39 @@ public class IndexController extends BaseController {
      **/
     @GetMapping("link")
     public String link(HttpServletRequest request) {
-        List<MetaVo> links=metaService.getLinks(Types.LINK.getType());
-        request.setAttribute("links",links);
+        List<MetaVo> links = metaService.getLinks(Types.LINK.getType());
+        request.setAttribute("links", links);
         return super.rend("link");
+    }
+
+    /**
+     * @return java.lang.String
+     * @Description 自定义页面
+     * @Param
+     **/
+    @GetMapping("/{pagename}")
+    public String custom(HttpServletRequest request, @PathVariable("pagename") String pagename) {
+        ContentVo contentVo;
+        //页面为空或者有异常抛出，返回到404页面
+        try {
+            contentVo = contentService.getContent(pagename);
+            if (contentVo == null) {
+                return super.page404();
+            }
+        } catch (Exception e) {
+            return super.page404();
+        }
+        if (contentVo.getAllowComment()) {
+            //获取评论页
+            String commentPage = request.getParameter("co");
+            if (StringUtils.isBlank(commentPage)) {
+                commentPage = "1";
+            }
+            PageInfo<CommentDto> commentDtoPageInfo = commentService.getComment(contentVo.getCid(), Integer.valueOf(commentPage), 6);
+            request.setAttribute("comments", commentDtoPageInfo);
+        }
+        request.setAttribute("article", contentVo);
+        return super.rend(pagename);
     }
 
     /**
