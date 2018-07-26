@@ -27,7 +27,7 @@ public class UUID {
         char[] uuid64 = new char[22];
         //uuid64数组偏移指针
         int index = 0;
-        //获取源uuid的前64位和后64位
+        //获取源uuid的前64位和后64位(返回的是10进制数)
         long most = uu.getMostSignificantBits();
         long least = uu.getLeastSignificantBits();
         //进行与运算(&)的基值，由于我们使用64进制，即可用6bit表示，所以我们取63（111111）来进行切割
@@ -35,7 +35,7 @@ public class UUID {
 
         //将前64位切割10次，还剩余4位参与后64位切割
         for (int off = 58; off >= 4; off -= 6) {
-            long hex = (most & (mask << off)) >>> off;
+            long hex = (most & (mask << off)) >>> off;//截取高位后不要忘记无符号右移回对应位数
             uuid64[index++] = _UUID64[(int) hex];
         }
         //前64位的低4位和后64位的高2位拼接

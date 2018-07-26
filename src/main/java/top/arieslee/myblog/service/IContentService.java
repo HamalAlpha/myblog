@@ -34,4 +34,11 @@ public interface IContentService {
      * @param page
      * @param limit*/
     PageInfo<ContentVo> getArticles(Integer mid, int page, int limit);
+
+    /**
+     * @return void
+     * @Description 根据cid更新文章内容
+     * @Param [contentVo]
+     **/
+    void updateContentByCid(ContentVo contentVo);
 }

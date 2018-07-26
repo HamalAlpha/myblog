@@ -12,7 +12,7 @@
         <result column="modified" jdbcType="INTEGER" property="modified"/>
         <result column="author_id" jdbcType="INTEGER" property="authorId"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
-        <result column="success" jdbcType="VARCHAR" property="success"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
         <result column="tags" jdbcType="VARCHAR" property="tags"/>
         <result column="categories" jdbcType="VARCHAR" property="categories"/>
         <result column="hits" jdbcType="INTEGER" property="hits"/>
@@ -63,7 +63,7 @@
 
     <!--基本字段-->
     <sql id="Base_Column_List">
-        cid, title, slug, created, modified, author_id, type, tags, categories, hits,
+        cid, title, slug, created, modified, author_id, type,status, tags, categories, hits,
         comments_num, allow_comment, allow_ping, allow_feed
     </sql>
     <!--文章字段-->
@@ -166,6 +166,58 @@
         allow_comment = #{allowComment,jdbcType=BIT},
         allow_ping = #{allowPing,jdbcType=BIT},
         allow_feed = #{allowFeed,jdbcType=BIT}
+        where cid = #{cid,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="top.arieslee.myblog.modal.VO.ContentVo">
+        update t_contents
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="slug != null">
+                slug = #{slug,jdbcType=VARCHAR},
+            </if>
+            <if test="created != null">
+                created = #{created,jdbcType=INTEGER},
+            </if>
+            <if test="modified != null">
+                modified = #{modified,jdbcType=INTEGER},
+            </if>
+            <if test="authorId != null">
+                author_id = #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="tags != null">
+                tags = #{tags,jdbcType=VARCHAR},
+            </if>
+            <if test="categories != null">
+                categories = #{categories,jdbcType=VARCHAR},
+            </if>
+            <if test="hits != null">
+                hits = #{hits,jdbcType=INTEGER},
+            </if>
+            <if test="commentsNum != null">
+                comments_num = #{commentsNum,jdbcType=INTEGER},
+            </if>
+            <if test="allowComment != null">
+                allow_comment = #{allowComment,jdbcType=BIT},
+            </if>
+            <if test="allowPing != null">
+                allow_ping = #{allowPing,jdbcType=BIT},
+            </if>
+            <if test="allowFeed != null">
+                allow_feed = #{allowFeed,jdbcType=BIT},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
         where cid = #{cid,jdbcType=INTEGER}
     </update>
 </mapper>

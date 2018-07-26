@@ -38,9 +38,14 @@ public interface ContentVoDao {
     ContentVo selectByPrimaryKey(Integer cid);
 
     /**
-     * @Description : 根据cid更新文章数据
+     * @Description : 根据cid更新文章数据（覆盖更新）
      **/
     void updateByPrimaryKey(ContentVo contentVo);
+
+    /**
+     * @Description 根据cid有选择地更新文章内容
+     **/
+    void updateByPrimaryKeySelective(ContentVo contentVo);
 
     /**
      * @Description 根据分类获取文章

@@ -25,6 +25,7 @@ import top.arieslee.myblog.service.IContentService;
 import top.arieslee.myblog.service.IMetaService;
 import top.arieslee.myblog.service.ISiteService;
 import top.arieslee.myblog.utils.IPKit;
+import top.arieslee.myblog.utils.MapCache;
 import top.arieslee.myblog.utils.PatternKit;
 import top.arieslee.myblog.utils.Tools;
 
@@ -105,6 +106,8 @@ public class IndexController extends BaseController {
         request.setAttribute("article", contentVo);
         //设置评论组件
         commentSet(request, contentVo);
+        //定时更新点击率
+        updateHits(Integer.valueOf(cid),contentVo.getHits());
         //页面跳转
         return super.rend("page");
     }
@@ -295,6 +298,31 @@ public class IndexController extends BaseController {
         }
         request.setAttribute("article", contentVo);
         return super.rend(pagename);
+    }
+
+
+    /**
+     * @return void
+     * @Description 更新文章点击数
+     * @Param [cid 文章id, chits 原文章点击数]
+     **/
+    @Transactional(rollbackFor = TipException.class)
+    public void updateHits(Integer cid, Integer chits) {
+        //从缓存中获取点击数
+        Integer hits = cachePool.get(Types.ARTICLE.getType(), String.valueOf(cid));
+        hits = hits == null ? 1 : hits + 1;
+        chits = chits == null ? 0 : chits;
+        //是否达到需要更新数据库的点击量
+        if (hits >= WebConstant.CRITICAL_HIT) {
+            ContentVo temp=new ContentVo();
+            temp.setCid(cid);
+            temp.setHits(chits+hits);
+            contentService.updateContentByCid(temp);
+            //更新缓存
+            cachePool.set(Types.ARTICLE.getType(), hits, String.valueOf(cid));
+        } else {
+            cachePool.set(Types.ARTICLE.getType(), hits, String.valueOf(cid));
+        }
     }
 
     /**

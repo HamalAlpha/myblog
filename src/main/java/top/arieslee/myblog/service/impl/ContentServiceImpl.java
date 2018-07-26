@@ -63,11 +63,12 @@ public class ContentServiceImpl implements IContentService {
             //两种情况：按照cid查找和按照slug查找
             if (PatternKit.isNum(cid)) {
                 ContentVo contentVo = contentVoDao.selectByPrimaryKey(Integer.valueOf(cid));
-                if (contentVo != null) {
-                    contentVo.setHits(contentVo.getHits() + 1);
-                    contentVoDao.updateByPrimaryKey(contentVo);
-                }
-                LOGGER.debug("Enter the getContent(String cid) method");
+                //每次请求都更新点击率，考虑到性能优化，不采用这种方式，而是定时批量更新
+//                if (contentVo != null) {
+//                    contentVo.setHits(contentVo.getHits() + 1);
+//                    contentVoDao.updateByPrimaryKey(contentVo);
+//                }
+                LOGGER.debug("Exit the getContent(String cid) method");
                 return contentVo;
             } else {
                 //创建查询模板
@@ -78,11 +79,11 @@ public class ContentServiceImpl implements IContentService {
                     //slug冲突
                     throw new TipException("The Slug you selected is more than 1");
                 }
-                LOGGER.debug("Enter the getContent(String cid) method");
+                LOGGER.debug("Exit the getContent(String cid) method");
                 return contentVoList.get(0);
             }
         }
-        LOGGER.debug("exit the getContent(String cid) method");
+        LOGGER.debug("Exit the getContent(String cid) method");
         return null;
     }
 
@@ -97,5 +98,14 @@ public class ContentServiceImpl implements IContentService {
         PageInfo<ContentVo> contentVoPageInfo = new PageInfo<>(contentVos);
         contentVoPageInfo.setTotal(total);
         return contentVoPageInfo;
+    }
+
+
+    @Override
+    //更新文章内容
+    public void updateContentByCid(ContentVo content){
+        if(content!=null&&content.getCid()!=null){
+            contentVoDao.updateByPrimaryKeySelective(content);
+        }
     }
 }
