@@ -75,7 +75,7 @@ public class ContentServiceImpl implements IContentService {
                 ContentVoExample example = new ContentVoExample();
                 example.createCriteria().andSlugEqualTo(cid);
                 List<ContentVo> contentVoList = contentVoDao.selectByExampleWithBLOBs(example);
-                if (contentVoList.size() >= 1) {
+                if (contentVoList.size() > 1) {
                     //slug冲突
                     throw new TipException("The Slug you selected is more than 1");
                 }

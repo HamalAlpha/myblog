@@ -1,9 +1,13 @@
 package top.arieslee.myblog.utils;
 
+import com.vdurmont.emoji.EmojiParser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import top.arieslee.myblog.constant.WebConstant;
 import top.arieslee.myblog.modal.VO.ContentVo;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * @ClassName Commons
@@ -75,6 +79,81 @@ public class Commons {
     public static String show_thumbnail(ContentVo contentVo) {
         int size = contentVo.getCid() % 20;
         size = size == 0 ? 1 : size;
-        return "user/img/rand/"+size+".jpg";
+        return "/user/img/rand/" + size + ".jpg";
+    }
+
+    //图标库
+    private static final String[] ICON_LIBRARY = {"bg-ico-book", "bg-ico-game", "bg-ico-note", "bg-ico-chat", "bg-ico-code", "bg-ico-image", "bg-ico-web", "bg-ico-link", "bg-ico-design", "bg-ico-lock"};
+
+    /**
+     * @Description 获取一张小图标
+     **/
+    public static String show_icon(Integer cid) {
+        return ICON_LIBRARY[cid % ICON_LIBRARY.length];
+    }
+
+    /**
+     * @Description 显示分类，可能归属多个类别
+     **/
+    public static String show_categories(String categories) throws UnsupportedEncodingException {
+        if (StringUtils.isNotBlank(categories)) {
+            //分割多个类
+            String str[] = categories.split(",");
+            StringBuilder sb = new StringBuilder();
+            for (String s : str) {
+                sb.append("<a href=\"/category/" + URLEncoder.encode(s, "UTF-8") + "\">" + s + "</a>");
+            }
+            return sb.toString();
+        }
+        return show_categories("默认分类");
+    }
+
+
+    /**
+     * @Description 时期格式化
+     **/
+    public static String fmtdate(Integer created) {
+        return fmtdate(created, "yyyy-MM-dd");
+    }
+
+    public static String fmtdate(Integer created, String ftm) {
+        if (created != null && StringUtils.isNotBlank(ftm)) {
+            return DateKit.formatDateByUnixTime(created,ftm);
+        }
+        return "";
+    }
+
+    /**
+     * @Description 返回gravatar头像地址
+     **/
+    public static String gravatar(String email) {
+        String avatarUrl = "https://secure.gravatar.com/avatar";
+        if (StringUtils.isBlank(email)) {
+            return avatarUrl;
+        }
+        String hash = Tools.MD5encode(email.trim().toLowerCase());
+        return avatarUrl + "/" + hash;
+    }
+
+    /**
+     * @Description 将类似 :smile: 这样的字符串转为emoji表情
+     **/
+    public static String emoji(String value){
+        return EmojiParser.parseToUnicode(value);
+    }
+
+    /**
+     * @return java.lang.String
+     * @Description 将markdown文章内容解析为html
+     * @Param [content 文章内容]
+     **/
+    public static String markdownParse(String content){
+        if(StringUtils.isNotBlank(content)){
+            //将注释去除
+            content=content.replace("<!--more-->","\r\n");
+            //调用解析工具
+            return Tools.mdToHtml(content);
+        }
+        return "";
     }
 }

@@ -40,8 +40,8 @@ public class SiteService implements ISiteService {
                 //将字符串转化为时间
                 Date sd = DateKit.dateParse(date, "yyyy年MM月");
                 //设定开始和结束时间
-                int start = DateKit.getTimeByDate(sd);
-                int end = DateKit.getTimeByDate(DateKit.dateAdd(DateKit.INTERVAL_MONTH, sd, 1));
+                int start = DateKit.getUnixTimeByDate(sd);
+                int end = DateKit.getUnixTimeByDate(DateKit.dateAdd(DateKit.INTERVAL_MONTH, sd, 1));
                 criteria.andCreatedGreaderThan(start);
                 criteria.andCreatedLessThan(end);
                 //查询该月份的文章列表

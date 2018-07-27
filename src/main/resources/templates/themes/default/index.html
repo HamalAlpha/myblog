@@ -18,38 +18,21 @@
                             <a th:href="${commons.permlink(article)}"
                                th:text="${article.title}"></a>
                         </div>
-                        <!--<div class="item-meta clearfix">-->
-                            <!--<div th:class="'item-meta-ico '+ ${commons.show_icon(article.cid)}"-->
-                                 <!--th:style="'background: url('+@{/user/img/bg-ico.png}+');no-repeat;background-size: 40px auto;' "></div>-->
-                            <!--<div class="item-meta-cat" th:utext="${commons.show_categories(article.categories)}">-->
-                            <!--</div>-->
-                        <!--</div>-->
+                        <div class="item-meta clearfix">
+                            <div th:class="'item-meta-ico '+ ${commons.show_icon(article.cid)}"
+                                 th:style="'background: url('+@{/user/img/bg-ico.png}+');no-repeat;background-size: 40px auto;' "></div>
+                            <div class="item-meta-cat" th:utext="${commons.show_categories(article.categories)}">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--<div class="lists-navigator clearfix">-->
-        <!--<div th:replace="comm/macros::pageNav(${articles},'←','→','page')"></div>-->
-    <!--</div>-->
+    <div class="lists-navigator clearfix">
+        <div th:replace="common/macros::pageNav(${articles},'←','→','page')"></div>
+    </div>
 </div>
 </body>
-<script >
-window.onload=function () {
-    $.ajax({
-        type: 'GET',
-        url: 'page/1',
-        date: {"id":"id"},
-        dataType: 'json',
-        contentType:"application/x-www-form-urlencoded ",
-        success: function (result) {
-            alert("ok");
-        },
-        error: function () {
-            //
-        }
-    });
-}
-</script>
 <!--<div th:replace="themes/default/baseFrame/footer::footer"></div>-->
 </html>

@@ -107,7 +107,7 @@ public class IndexController extends BaseController {
         //设置评论组件
         commentSet(request, contentVo);
         //定时更新点击率
-        updateHits(Integer.valueOf(cid),contentVo.getHits());
+        updateHits(Integer.valueOf(contentVo.getCid()),contentVo.getHits());
         //页面跳转
         return super.rend("page");
     }
@@ -226,7 +226,7 @@ public class IndexController extends BaseController {
         return this.categories(request, keyword, 1, limit);
     }
 
-    @GetMapping("category/{keyword}/{page}")
+    @GetMapping("category/{keyword}/{page}")//前台分页尚未完成
     public String categories(HttpServletRequest request, @PathVariable("keyword") String keyword, @PathVariable("page") int page, @RequestParam(value = "limit", defaultValue = "1") int limit) {
         page = page <= 0 || page > WebConstant.MAX_PAGE ? 1 : page;
         MetaDto metaDto = metaService.getMetaCount(Types.CATEGORY.getType(), keyword);

@@ -15,13 +15,13 @@ import java.util.Date;
  **/
 public class DateKit {
 
-    public static final int INTERVAL_DAY=1;
-    public static final int INTERVAL_WEEK=2;
-    public static final int INTERVAL_MONTH=3;
-    public static final int INTERVAL_YEAR=4;
-    public static final int INTERVAL_HOUR=5;
-    public static final int INTERVAL_MINUTE=6;
-    public static final int INTERVAL_SECOND=7;
+    public static final int INTERVAL_DAY = 1;
+    public static final int INTERVAL_WEEK = 2;
+    public static final int INTERVAL_MONTH = 3;
+    public static final int INTERVAL_YEAR = 4;
+    public static final int INTERVAL_HOUR = 5;
+    public static final int INTERVAL_MINUTE = 6;
+    public static final int INTERVAL_SECOND = 7;
 
 
     /**
@@ -43,13 +43,38 @@ public class DateKit {
         }
     }
 
-    public static int getTimeByDate(Date date) {
-        return (int)(date.getTime() / 1000L);
+    /**
+     * @return java.lang.String
+     * @Description 格式化时间校准器
+     * @Param [unixTime 时间校准器, ftm 指定格式]
+     **/
+    public static String formatDateByUnixTime(long unixTime, String ftm) {
+        return formatDate(new Date(unixTime * 1000L), ftm);
+    }
+
+    /**
+     * @return java.lang.String
+     * @Description 格式化时间戳
+     * @Param [date, ftm]
+     **/
+    public static String formatDate(Date date, String ftm) {
+        if (date != null && StringUtils.isNotBlank(ftm)) {
+            SimpleDateFormat sdf = new SimpleDateFormat(ftm);
+            return sdf.format(date);
+        }
+        return "";
+    }
+
+    /**
+     * @Description 获取时间戳（秒为单位）
+     **/
+    public static int getUnixTimeByDate(Date date) {
+        return (int) (date.getTime() / 1000L);
     }
 
     /**
      * @return java.util.Date
-     * @Description 在原有时间上增加一段时间，这里待改进，没有考虑每月不一定为30天的情况
+     * @Description 在原有时间上增加一段时间，这里待改进，没有考虑每月不一定为30天，每年不一定365的情况
      * @Param [interval 增加幅度：年、月等, date 原时间, n 增加数量]
      **/
     public static Date dateAdd(int interval, Date date, int n) {
