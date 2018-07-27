@@ -1,7 +1,8 @@
 package top.arieslee.myblog.service;
 
 import com.github.pagehelper.PageInfo;
-import top.arieslee.myblog.modal.BO.CommentBo;
+import top.arieslee.myblog.dto.CommentDto;
+import top.arieslee.myblog.modal.VO.CommentVo;
 
 /**
  * @ClassName ICommentService
@@ -18,5 +19,12 @@ public interface ICommentService {
      * @Param 
      * @return 
      **/
-    PageInfo<CommentBo> getComment(Integer cid,Integer pageNum,Integer limit);
+    PageInfo<CommentDto> getComment(Integer cid, Integer pageNum, Integer limit);
+
+    /**
+     * @Description 插入新的评论
+     * @Param [commentVo]
+     * @return void
+     **/
+    void insertComment(CommentVo commentVo);
 }

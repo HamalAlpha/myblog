@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import top.arieslee.myblog.constant.Types;
 import top.arieslee.myblog.utils.Commons;
+import top.arieslee.myblog.utils.MapCache;
+import top.arieslee.myblog.utils.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,12 +26,23 @@ public class BaseInterceptor implements HandlerInterceptor {
     @Autowired
     private Commons commons;
 
+    private MapCache mapCache=MapCache.getCachePool();
+
     @Override
     //该方法将在请求处理之前进行调用，只有该方法返回true，才会继续执行后续的Interceptor和Controller，
     //当返回值为true时就会继续调用下一个Interceptor的preHandle方法，
     //如果已经是最后一个Interceptor的时候就会是调用当前请求的Controller方法。
-    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
 
+        String uri=request.getRequestURI();
+
+        //设置get请求csrf_token
+        if(request.getMethod().equals("GET")){
+            String csrf_token=UUID.UUID64();
+            //存入缓冲池，默认保存30分钟
+            mapCache.set(Types.CSRF_TOKEN.getType(),uri,60*30,csrf_token);
+            request.setAttribute("csrf_token",csrf_token);
+        }
         return true;
     }
 

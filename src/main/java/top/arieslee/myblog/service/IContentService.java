@@ -1,7 +1,6 @@
 package top.arieslee.myblog.service;
 
 import com.github.pagehelper.PageInfo;
-import top.arieslee.myblog.exception.TipException;
 import top.arieslee.myblog.modal.VO.ContentVo;
 
 /**
@@ -28,4 +27,18 @@ public interface IContentService {
      * @return 
      **/
     ContentVo getContent(String cid);
+
+    /**
+     * @Description 分类归档页文章
+     * @param mid
+     * @param page
+     * @param limit*/
+    PageInfo<ContentVo> getArticles(Integer mid, int page, int limit);
+
+    /**
+     * @return void
+     * @Description 根据cid更新文章内容
+     * @Param [contentVo]
+     **/
+    void updateContentByCid(ContentVo contentVo);
 }

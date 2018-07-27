@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.arieslee.myblog.dao.MetaVoDao">
+    <resultMap id="BaseResultMap" type="top.arieslee.myblog.modal.VO.MetaVo">
+        <id column="mid" jdbcType="INTEGER" property="mid"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="slug" jdbcType="VARCHAR" property="slug"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="parent" jdbcType="INTEGER" property="parent"/>
+    </resultMap>
+
+    <resultMap id="MetaDto" type="top.arieslee.myblog.dto.MetaDto" extends="BaseResultMap">
+        <result column="count" property="count" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+      mid, name, slug, type, description, sort, parent
+    </sql>
+
+    <select id="selectByExample" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_metas
+        <if test="_parameter!=null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause!=null">
+            order by ${orderByClause}
+        </if>
+        <if test="limit != null">
+            <if test="offset != null">
+                limit ${offset}, ${limit}
+            </if>
+            <if test="offset == null">
+                limit ${limit}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectByTypeAndName" resultMap="MetaDto">
+        select meta.*,count(relationship.cid) as count
+        from t_metas as meta left join `t_relationships` as relationship on meta.mid=relationship.mid
+        where meta.type=#{type} and meta.name=#{name}
+        group by meta.mid
+    </select>
+
+    <select id="countByMid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(0)
+        from t_contents as content left join `t_relationships` as relationship on content.cid=relationship.cid
+        where content.status='publish' and content.type='post' and relationship.mid=#{mid}
+    </select>
+</mapper>

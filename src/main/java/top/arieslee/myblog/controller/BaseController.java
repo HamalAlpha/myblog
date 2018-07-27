@@ -1,5 +1,7 @@
 package top.arieslee.myblog.controller;
 
+import top.arieslee.myblog.utils.MapCache;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -13,6 +15,9 @@ public class BaseController {
 
     //主题属性
     public static String THEME = "themes/default";
+
+    //全局缓存池
+    public static MapCache cachePool=MapCache.getCachePool();
 
     /**
      * @Description : 页面跳转控制

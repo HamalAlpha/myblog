@@ -21,6 +21,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     //加入自定义拦截器
     public void addInterceptors(InterceptorRegistry registry) {
+        //加入拦截器，可进一步设置拦截哪些请求和排除拦截哪些请求
         super.addInterceptors(registry);
         registry.addInterceptor(baseInterceptor).addPathPatterns("/**");
                 //.excludePathPatterns("");

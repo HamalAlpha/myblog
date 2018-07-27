@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 该xml配置中,xml元素大小写不敏感 -->
-<!-- status="off",log4j2把自身事件记录到控制台的配置，off表示不记录，其余的记录有trace，debug，info，warn，error，fatal -->
+<!-- success="off",log4j2把自身事件记录到控制台的配置，off表示不记录，其余的记录有trace，debug，info，warn，error，fatal -->
 <!-- monitorInterval表示检测更改配置的时间,单位是秒,最小间隔为5秒,0或负数表示不检测 -->
 <!--
 在资源文件夹src/main/resources下添加log4j2.xml或者log4j2-spring.xml，启动后spring boot自动加载，也可以在application.properties
 配置文件中添加'logging.config=classpath:log4j2.xml'手动加载
  -->
-<configuration name="test-cfg" status="off" monitorInterval="0">
+<configuration name="test-cfg" success="off" monitorInterval="0">
 
     <!-- 常量引用 -->
     <properties>

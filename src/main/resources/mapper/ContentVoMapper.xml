@@ -63,7 +63,7 @@
 
     <!--基本字段-->
     <sql id="Base_Column_List">
-        cid, title, slug, created, modified, author_id, type, status, tags, categories, hits,
+        cid, title, slug, created, modified, author_id, type,status, tags, categories, hits,
         comments_num, allow_comment, allow_ping, allow_feed
     </sql>
     <!--文章字段-->
@@ -74,7 +74,7 @@
     <!--
         SELECT
     -->
-    <!--根据模板查找文章-->
+    <!--根据模板查找文章，包括文章内容-->
     <select id="selectByExampleWithBLOBs" parameterType="top.arieslee.myblog.modal.VO.ContentVoExample"
             resultMap="baseResultMapWithBLOBs">
         select
@@ -93,6 +93,31 @@
             order by ${orderByClause}
         </if>
     </select>
+    <!--根据模板查找文章，不包括文章内容-->
+    <select id="selectByExample" parameterType="top.arieslee.myblog.modal.VO.ContentVoExample"
+            resultMap="baseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from t_contents
+        <!-- _parameter是mybatis的内置属性，代表传入参数-->
+        <if test="_parameter !=null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause!=null">
+            order by ${orderByClause}
+        </if>
+        <if test="limit != null">
+            <if test="offset != null">
+                limit ${offset}, ${limit}
+            </if>
+            <if test="offset == null">
+                limit ${limit}
+            </if>
+        </if>
+    </select>
     <!--根据cid查找content-->
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="baseResultMapWithBLOBs">
         select 
@@ -101,6 +126,25 @@
         <include refid="Blob_Column_List" />
         from t_contents
         where cid=#{cid,jdbcType=INTEGER}
+    </select>
+
+    <!--根据分类获取文章列表-->
+    <select id="findByMid" parameterType="java.lang.Integer" resultMap="baseResultMapWithBLOBs">
+        select content.*
+        from t_contents as content left join `t_relationships` as relationship on content.cid=relationship.cid
+        where content.status='publish' and content.type='post' and relationship.mid=#{mid}
+    </select>
+
+    <resultMap id="ArchiveDtoMap" type="top.arieslee.myblog.dto.ArchiveDto">
+        <id column="date" property="date" />
+        <result column="count" property="count" />
+    </resultMap>
+    <select id="findArchiveDtoByMonth" resultMap="ArchiveDtoMap">
+        select FROM_UNIXTIME(created,'%Y年%m月') as date,count(*) as count
+        from t_contents
+        where type='post' and status='publish'
+        group by date
+        order by created desc
     </select>
 
     <!--
@@ -115,7 +159,6 @@
         modified = #{modified,jdbcType=INTEGER},
         author_id = #{authorId,jdbcType=INTEGER},
         type = #{type,jdbcType=VARCHAR},
-        status = #{status,jdbcType=VARCHAR},
         tags = #{tags,jdbcType=VARCHAR},
         categories = #{categories,jdbcType=VARCHAR},
         hits = #{hits,jdbcType=INTEGER},
@@ -123,6 +166,58 @@
         allow_comment = #{allowComment,jdbcType=BIT},
         allow_ping = #{allowPing,jdbcType=BIT},
         allow_feed = #{allowFeed,jdbcType=BIT}
+        where cid = #{cid,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="top.arieslee.myblog.modal.VO.ContentVo">
+        update t_contents
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="slug != null">
+                slug = #{slug,jdbcType=VARCHAR},
+            </if>
+            <if test="created != null">
+                created = #{created,jdbcType=INTEGER},
+            </if>
+            <if test="modified != null">
+                modified = #{modified,jdbcType=INTEGER},
+            </if>
+            <if test="authorId != null">
+                author_id = #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="tags != null">
+                tags = #{tags,jdbcType=VARCHAR},
+            </if>
+            <if test="categories != null">
+                categories = #{categories,jdbcType=VARCHAR},
+            </if>
+            <if test="hits != null">
+                hits = #{hits,jdbcType=INTEGER},
+            </if>
+            <if test="commentsNum != null">
+                comments_num = #{commentsNum,jdbcType=INTEGER},
+            </if>
+            <if test="allowComment != null">
+                allow_comment = #{allowComment,jdbcType=BIT},
+            </if>
+            <if test="allowPing != null">
+                allow_ping = #{allowPing,jdbcType=BIT},
+            </if>
+            <if test="allowFeed != null">
+                allow_feed = #{allowFeed,jdbcType=BIT},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
         where cid = #{cid,jdbcType=INTEGER}
     </update>
 </mapper>

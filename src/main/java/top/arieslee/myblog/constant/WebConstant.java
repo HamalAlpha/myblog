@@ -15,10 +15,15 @@ public class WebConstant {
     /**
      * @Description :设置分页页码最大值
      **/
-    public static final int MAX_PAGE=100;
+    public static final int MAX_PAGE = 100;
 
     /**
      * @Description : 保存前台页面配置信息
      **/
-    public static Map<String,String> initConfig=new HashMap<>();
+    public static final Map<String, String> initConfig = new HashMap<>();
+
+    /**
+     * @Description 临界点击数
+     **/
+    public static final int CRITICAL_HIT = 10;
 }
