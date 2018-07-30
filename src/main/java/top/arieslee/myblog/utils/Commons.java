@@ -69,7 +69,7 @@ public class Commons {
      * @Description : 文章链接拼接
      **/
     public static String permlink(Integer cid, String slug) {
-        String str = "/ariticle/" + (StringUtils.isNotBlank(slug) ? slug : cid.toString());
+        String str = "/article/" + (StringUtils.isNotBlank(slug) ? slug : cid.toString());
         return site_url(str);
     }
 

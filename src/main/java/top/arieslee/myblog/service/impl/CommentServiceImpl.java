@@ -86,7 +86,7 @@ public class CommentServiceImpl implements ICommentService {
         commentVo.setOwnerId(contentVo.getCid());//评论归属文章id
         commentVo.setCreated((int) (System.currentTimeMillis() / 1000));//评论创建时间
         //执行插入操作
-        commentVoDao.insertComment(commentVo);
+        commentVoDao.insertSelective(commentVo);
         //更新评论数
         contentVo.setCommentsNum(contentVo.getCommentsNum() + 1);
         contentVoDao.updateByPrimaryKey(contentVo);
