@@ -1,5 +1,6 @@
 package top.arieslee.myblog.utils;
 
+import com.github.pagehelper.PageInfo;
 import com.vdurmont.emoji.EmojiParser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -155,5 +156,15 @@ public class Commons {
             return Tools.mdToHtml(content);
         }
         return "";
+    }
+
+    /**
+     * 判断分页中是否有数据
+     *
+     * @param paginator
+     * @return
+     */
+    public static boolean is_empty(PageInfo paginator) {
+        return paginator == null || (paginator.getList() == null) || (paginator.getList().size() == 0);
     }
 }

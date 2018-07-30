@@ -36,8 +36,9 @@ public class SiteService implements ISiteService {
                 ContentVoExample example = new ContentVoExample();
                 ContentVoExample.Criteria criteria = example.createCriteria().andTypeEqualTo(Types.ARTICLE.getType()).andStatusEauqlTo(Types.PUBLISH.getType());
                 example.setOrderByClause("created desc");
+                //获取归档日期
                 String date = archive.getDate();
-                //将字符串转化为时间
+                //将字符串按指定格式解析为Date对象
                 Date sd = DateKit.dateParse(date, "yyyy年MM月");
                 //设定开始和结束时间
                 int start = DateKit.getUnixTimeByDate(sd);
