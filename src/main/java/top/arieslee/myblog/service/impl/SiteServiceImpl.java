@@ -21,7 +21,7 @@ import java.util.List;
  * @Version 1.0
  **/
 @Service
-public class SiteService implements ISiteService {
+public class SiteServiceImpl implements ISiteService {
 
     @Autowired
     ContentVoDao contentVoDao;

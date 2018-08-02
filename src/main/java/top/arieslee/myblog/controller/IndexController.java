@@ -27,6 +27,7 @@ import top.arieslee.myblog.service.ISiteService;
 import top.arieslee.myblog.utils.IPKit;
 import top.arieslee.myblog.utils.PatternKit;
 import top.arieslee.myblog.utils.Tools;
+import top.arieslee.myblog.utils.WebKit;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -198,9 +199,9 @@ public class IndexController extends BaseController {
         try {
             commentService.insertComment(commentVo);
             //添加cookie
-            setCookie("comment_user_name", commentVo.getAuthor(), 1 * 24 * 60 * 60, response);
-            setCookie("comment_user_mail", commentVo.getMail(), 1 * 24 * 60 * 60, response);
-            setCookie("comment_user_url", commentVo.getUrl(), 1 * 24 * 60 * 60, response);
+            WebKit.setCookie("comment_user_name", commentVo.getAuthor(), 1 * 24 * 60 * 60, response);
+            WebKit.setCookie("comment_user_mail", commentVo.getMail(), 1 * 24 * 60 * 60, response);
+            WebKit.setCookie("comment_user_url", commentVo.getUrl(), 1 * 24 * 60 * 60, response);
             //设置评论频率缓存
             cachePool.set(Types.COMMENT_FREQUENCY.getType(), 1, 60, ip, cid.toString());
             //返回成功结果
@@ -322,17 +323,5 @@ public class IndexController extends BaseController {
         } else {
             cachePool.set(Types.ARTICLE.getType(), hits, String.valueOf(cid));
         }
-    }
-
-    /**
-     * @return void
-     * @Description 为用户添加cookie值
-     * @Param [key：键, value：值, maxAge：有效期, response：响应对象]
-     **/
-    public void setCookie(String key, String value, int maxAge, HttpServletResponse response) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(maxAge);
-        cookie.setSecure(false);//表示可用于http和https传回cookie
-        response.addCookie(cookie);
     }
 }

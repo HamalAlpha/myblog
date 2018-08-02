@@ -4,9 +4,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 /**
  * @ClassName Tools
@@ -22,7 +29,6 @@ public class Tools {
 
     /**
      * 替换HTML脚本，防止XSS注入
-     *
      * @param value
      * @return
      */
@@ -37,6 +43,11 @@ public class Tools {
         return value;
     }
 
+    /**
+     * @param markdown markdown源文档
+     * @return java.lang.String
+     * @Description 将markdown文档转化为html文档
+     **/
     public static String mdToHtml(String markdown){
         if(StringUtils.isBlank(markdown)){
             return "";
@@ -58,7 +69,7 @@ public class Tools {
     }
 
     /**
-     * @Description md5加密
+     * @Description md5加密（转16进制）
      **/
     public static String MD5encode(String source){
         if (StringUtils.isBlank(source)) {
@@ -69,6 +80,7 @@ public class Tools {
             messageDigest = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException ignored) {
         }
+        //调用jdk自带的MD5工具
         byte[] encode = messageDigest.digest(source.getBytes());
         StringBuilder hexString = new StringBuilder();
         for (byte anEncode : encode) {
@@ -79,5 +91,73 @@ public class Tools {
             hexString.append(hex);
         }
         return hexString.toString();
+    }
+
+    /**
+     * @param cleartext 待加密明文
+     * @param keyLength 密钥长度：128、192、256（密钥长度与安全性成正比，与性能成反比）
+     * @param workingPattern 工作模式
+     * @param fillStyle 填充模式
+     * @return java.lang.String 返回加密后的字符串
+     * @Description AES加密
+     **/
+    public static String enAES(String cleartext,String key, int keyLength, String workingPattern, String fillStyle) throws Exception {
+        //自定义加密规则
+        String cipherInitInfo = "AES/" + workingPattern + "/" + fillStyle;
+        //构造加密器
+        Cipher cipher = Cipher.getInstance(cipherInitInfo);
+        //获取明文字节数组
+        byte[] byteContent = cleartext.getBytes("utf-8");
+        //使用加密模式，传入密钥
+        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(key,keyLength));
+        //加密操作
+        byte[] result = cipher.doFinal(byteContent);
+        //加密后使用BASE64编码转换
+        return new BASE64Encoder().encode(result);
+    }
+    /**
+     * @Description 默认接口，使用AES加密默认值
+     **/
+    public static String enAES(String cleartext,String key) throws Exception {
+        return enAES(cleartext,key,128,"ECB","PKCS5Padding");
+    }
+
+    /**
+     * @param ciphertext 待解密密文
+     * @param key
+     * @param keyLength
+     * @param workingPattern
+     * @param fillStyle
+     * @return java.lang.String 返回解密后字符串
+     * @Description AES解密
+     **/
+    public static String deAES(String ciphertext ,String key,int keyLength, String workingPattern, String fillStyle) throws Exception{
+        String cipherInitInfo = "AES/" + workingPattern + "/" + fillStyle;
+        Cipher cipher = Cipher.getInstance(cipherInitInfo);
+        //用BASE64解码
+        byte[] byteContent = new BASE64Decoder().decodeBuffer(ciphertext);
+        //使用解密模式，传入密钥
+        cipher.init(Cipher.DECRYPT_MODE, getSecretKey(key,keyLength));
+        return new String(cipher.doFinal(byteContent));
+    }
+    public static String deAES(String ciphertext,String key) throws Exception {
+        return deAES(ciphertext,key,128,"ECB","PKCS5Padding");
+    }
+
+    /**
+     * @param key 自定义密钥种子
+     * @param keyLength 密钥长度
+     * @return javax.crypto.spec.SecretKeySpec
+     * @Description 获取AES密钥
+     **/
+    private static SecretKeySpec getSecretKey(String key, int keyLength) throws NoSuchAlgorithmException {
+        //密钥生产者
+        KeyGenerator kgen = KeyGenerator.getInstance("AES");
+        //初始化密钥生产信息。SecureRandom这里指定种子key.getBytes()，意味着每次所获取的随机数一样
+        kgen.init(keyLength, new SecureRandom(key.getBytes()));
+        //获取密钥
+        SecretKey secretKey = kgen.generateKey();
+        //返回AES专用密钥
+        return new SecretKeySpec(secretKey.getEncoded(),"AES");
     }
 }
