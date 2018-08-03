@@ -27,6 +27,7 @@ public class WebKit {
         try {
             //AES加密
             value = Tools.enAES(value, WebConstant.AES_SALT);
+            System.out.println(Tools.deAES("zHU574bYI1Q3DLtjitDfwA==",WebConstant.AES_SALT));
             Cookie cookie = new Cookie(name, value);
             if (StringUtils.isNotBlank(path)) {
                 cookie.setPath(path);

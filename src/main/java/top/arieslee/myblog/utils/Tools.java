@@ -119,7 +119,7 @@ public class Tools {
      * @Description 默认接口，使用AES加密默认值
      **/
     public static String enAES(String cleartext,String key) throws Exception {
-        return enAES(cleartext,key,128,"ECB","PKCS5Padding");
+        return enAES(cleartext,key,128,"ECB","ISO10126Padding");
     }
 
     /**
@@ -141,14 +141,14 @@ public class Tools {
         return new String(cipher.doFinal(byteContent));
     }
     public static String deAES(String ciphertext,String key) throws Exception {
-        return deAES(ciphertext,key,128,"ECB","PKCS5Padding");
+        return deAES(ciphertext,key,128,"ECB","ISO10126Padding");
     }
 
     /**
      * @param key 自定义密钥种子
      * @param keyLength 密钥长度
      * @return javax.crypto.spec.SecretKeySpec
-     * @Description 获取AES密钥
+     * @Description 获取密钥
      **/
     private static SecretKeySpec getSecretKey(String key, int keyLength) throws NoSuchAlgorithmException {
         //密钥生产者

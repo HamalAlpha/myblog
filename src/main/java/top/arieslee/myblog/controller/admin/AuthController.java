@@ -5,14 +5,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import top.arieslee.myblog.constant.LogAction;
 import top.arieslee.myblog.constant.WebConstant;
+import top.arieslee.myblog.controller.BaseController;
 import top.arieslee.myblog.dto.ResponseDto;
 import top.arieslee.myblog.exception.TipException;
 import top.arieslee.myblog.modal.VO.UserVo;
 import top.arieslee.myblog.service.IUserService;
+import top.arieslee.myblog.service.impl.LogService;
+import top.arieslee.myblog.utils.IPKit;
 import top.arieslee.myblog.utils.MapCache;
 import top.arieslee.myblog.utils.WebKit;
 
@@ -28,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  **/
 @Controller("AuthController")
 @RequestMapping("/admin")
-public class AuthController {
+public class AuthController extends BaseController {
 
     //日志对象
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
@@ -40,12 +42,20 @@ public class AuthController {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private LogService logService;
+
+    @GetMapping("login")
+    public String login(){
+        return "admin/login";
+    }
+
     /**
      * @return top.arieslee.myblog.dto.ResponseDto
-     * @Description 登录控制
-     * @Param [username, password, remember_me, request, response]
+     * @Description 登录
+     * @Param [username, assword, remember_me, request, response]
      **/
-    @RequestMapping("/login")
+    @PostMapping("/login")
     @ResponseBody
     public ResponseDto login(@RequestParam String username,
                              @RequestParam String password,
@@ -64,8 +74,8 @@ public class AuthController {
             if (StringUtils.isNotBlank(remember_me)) {
                 WebKit.setCookie(WebConstant.LOGI_SESSION_KEY, userVo.getUid().toString(), 60 * 30, response);
             }
-            //日志记录 TODO
-
+            //日志记录
+            logService.insertLog(LogAction.LOGIN.getAction(),null,userVo.getUid(),IPKit.getIPAddrByRequest(request));
         } catch (Exception e) {
             errorCount = errorCount == null ? 1 : errorCount + 1;
             //记录登录错误次数
