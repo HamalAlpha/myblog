@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  **/
 public class MapCache {
 
-    //最大缓存数量
+    //初始最大缓存数量
     private static final int MAX_CACHE_COUNT = 1024;
 
     //懒汉单例

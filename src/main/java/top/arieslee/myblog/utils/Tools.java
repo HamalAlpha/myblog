@@ -14,6 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Random;
 
 /**
  * @ClassName Tools
@@ -25,10 +26,11 @@ import java.security.SecureRandom;
 public class Tools {
 
     //markdown解析对象
-    private static Parser parser=Parser.builder().build();
+    private static Parser parser = Parser.builder().build();
 
     /**
      * 替换HTML脚本，防止XSS注入
+     *
      * @param value
      * @return
      */
@@ -48,8 +50,8 @@ public class Tools {
      * @return java.lang.String
      * @Description 将markdown文档转化为html文档
      **/
-    public static String mdToHtml(String markdown){
-        if(StringUtils.isBlank(markdown)){
+    public static String mdToHtml(String markdown) {
+        if (StringUtils.isBlank(markdown)) {
             return "";
         }
         Node document = parser.parse(markdown);
@@ -71,7 +73,7 @@ public class Tools {
     /**
      * @Description md5加密（转16进制）
      **/
-    public static String MD5encode(String source){
+    public static String MD5encode(String source) {
         if (StringUtils.isBlank(source)) {
             return null;
         }
@@ -94,14 +96,14 @@ public class Tools {
     }
 
     /**
-     * @param cleartext 待加密明文
-     * @param keyLength 密钥长度：128、192、256（密钥长度与安全性成正比，与性能成反比）
+     * @param cleartext      待加密明文
+     * @param keyLength      密钥长度：128、192、256（密钥长度与安全性成正比，与性能成反比）
      * @param workingPattern 工作模式
-     * @param fillStyle 填充模式
+     * @param fillStyle      填充模式
      * @return java.lang.String 返回加密后的字符串
      * @Description AES加密
      **/
-    public static String enAES(String cleartext,String key, int keyLength, String workingPattern, String fillStyle) throws Exception {
+    public static String enAES(String cleartext, String key, int keyLength, String workingPattern, String fillStyle) throws Exception {
         //自定义加密规则
         String cipherInitInfo = "AES/" + workingPattern + "/" + fillStyle;
         //构造加密器
@@ -109,21 +111,22 @@ public class Tools {
         //获取明文字节数组
         byte[] byteContent = cleartext.getBytes("utf-8");
         //使用加密模式，传入密钥
-        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(key,keyLength));
+        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(key, keyLength));
         //加密操作
         byte[] result = cipher.doFinal(byteContent);
         //加密后使用BASE64编码转换
         return new BASE64Encoder().encode(result);
     }
+
     /**
      * @Description 默认接口，使用AES加密默认值
      **/
-    public static String enAES(String cleartext,String key) throws Exception {
-        return enAES(cleartext,key,128,"ECB","ISO10126Padding");
+    public static String enAES(String cleartext, String key) throws Exception {
+        return enAES(cleartext, key, 128, "ECB", "ISO10126Padding");
     }
 
     /**
-     * @param ciphertext 待解密密文
+     * @param ciphertext     待解密密文
      * @param key
      * @param keyLength
      * @param workingPattern
@@ -131,21 +134,22 @@ public class Tools {
      * @return java.lang.String 返回解密后字符串
      * @Description AES解密
      **/
-    public static String deAES(String ciphertext ,String key,int keyLength, String workingPattern, String fillStyle) throws Exception{
+    public static String deAES(String ciphertext, String key, int keyLength, String workingPattern, String fillStyle) throws Exception {
         String cipherInitInfo = "AES/" + workingPattern + "/" + fillStyle;
         Cipher cipher = Cipher.getInstance(cipherInitInfo);
         //用BASE64解码
         byte[] byteContent = new BASE64Decoder().decodeBuffer(ciphertext);
         //使用解密模式，传入密钥
-        cipher.init(Cipher.DECRYPT_MODE, getSecretKey(key,keyLength));
+        cipher.init(Cipher.DECRYPT_MODE, getSecretKey(key, keyLength));
         return new String(cipher.doFinal(byteContent));
     }
-    public static String deAES(String ciphertext,String key) throws Exception {
-        return deAES(ciphertext,key,128,"ECB","ISO10126Padding");
+
+    public static String deAES(String ciphertext, String key) throws Exception {
+        return deAES(ciphertext, key, 128, "ECB", "ISO10126Padding");
     }
 
     /**
-     * @param key 自定义密钥种子
+     * @param key       自定义密钥种子
      * @param keyLength 密钥长度
      * @return javax.crypto.spec.SecretKeySpec
      * @Description 获取密钥
@@ -158,6 +162,17 @@ public class Tools {
         //获取密钥
         SecretKey secretKey = kgen.generateKey();
         //返回AES专用密钥
-        return new SecretKeySpec(secretKey.getEncoded(),"AES");
+        return new SecretKeySpec(secretKey.getEncoded(), "AES");
+    }
+
+    /**
+     * @param max 最大值（包括）
+     * @param min 最小值（包括）
+     * @return int
+     * @Description 
+     **/
+    public static int getRandom(int max, int min) {
+        Random r = new Random();
+        return r.nextInt(max - min + 1) + min;
     }
 }

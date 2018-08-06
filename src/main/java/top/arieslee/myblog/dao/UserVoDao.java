@@ -28,4 +28,9 @@ public interface UserVoDao {
      * @Param [example]
      **/
     List<UserVo> selectByExample(UserVoExample example);
+
+    /**
+     * @Description 查询指定uid
+     **/
+    UserVo selectByPrimaryKey(Integer uid);
 }

@@ -20,8 +20,11 @@ public class WebConstant {
     /**
      * @Description session用户属性值
      **/
-    public static final String LOGI_SESSION_KEY="login_user";
+    public static final String LOGIN_SESSION_KEY ="login_user";
 
+    /**
+     * @Description AES盐值（密钥）
+     **/
     public static final String AES_SALT="1a2b3c4d5e6f7g8h9i0j";
 
     /**

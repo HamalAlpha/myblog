@@ -6,9 +6,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import top.arieslee.myblog.constant.Types;
+import top.arieslee.myblog.constant.WebConstant;
+import top.arieslee.myblog.dao.UserVoDao;
+import top.arieslee.myblog.modal.VO.UserVo;
+import top.arieslee.myblog.service.IUserService;
+import top.arieslee.myblog.service.impl.UserServiceImpl;
 import top.arieslee.myblog.utils.Commons;
 import top.arieslee.myblog.utils.MapCache;
 import top.arieslee.myblog.utils.UUID;
+import top.arieslee.myblog.utils.WebKit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +32,10 @@ public class BaseInterceptor implements HandlerInterceptor {
     @Autowired
     private Commons commons;
 
-    private MapCache mapCache=MapCache.getCachePool();
+    @Autowired
+    private UserVoDao userVoDao;
+
+    private MapCache mapCache = MapCache.getCachePool();
 
     @Override
     //该方法将在请求处理之前进行调用，只有该方法返回true，才会继续执行后续的Interceptor和Controller，
@@ -34,14 +43,39 @@ public class BaseInterceptor implements HandlerInterceptor {
     //如果已经是最后一个Interceptor的时候就会是调用当前请求的Controller方法。
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
 
-        String uri=request.getRequestURI();
+        String uri = request.getRequestURI();
+
+        //尝试从session中获取管理员用户
+        UserVo user = WebKit.getUser(request);
+
+        //尝试从cookie中获取uid，并获取user
+        if (user == null) {
+            Integer uid = WebKit.getUid(WebConstant.USER_IN_COOKIE, request);//cookie可以伪造，待改进
+            if (uid != null) {
+                user = userVoDao.selectByPrimaryKey(uid);
+                //设置session
+                request.getSession().setAttribute(WebConstant.LOGIN_SESSION_KEY, user);
+            }
+        }
+
+        //拦截未登录的管理员请求
+        if (uri.startsWith("/admin") && !uri.startsWith("/admin/login") && user == null) {
+            response.sendRedirect(request.getContextPath() + "/admin/login");
+            return false;
+        }
+
+        //对已登录的login请求，直接跳转到首页
+        if (user != null && uri.startsWith("/admin/login")) {
+            response.sendRedirect(request.getContextPath() + "/admin/index");
+            return false;
+        }
 
         //设置get请求csrf_token
-        if(request.getMethod().equals("GET")){
-            String csrf_token=UUID.UUID64();
+        if (request.getMethod().equals("GET")) {
+            String csrf_token = UUID.UUID64();
             //存入缓冲池，默认保存30分钟
-            mapCache.set(Types.CSRF_TOKEN.getType(),uri,60*30,csrf_token);
-            request.setAttribute("csrf_token",csrf_token);
+            mapCache.set(Types.CSRF_TOKEN.getType(), uri, 60 * 30, csrf_token);
+            request.setAttribute("csrf_token", csrf_token);
         }
         return true;
     }
@@ -51,7 +85,7 @@ public class BaseInterceptor implements HandlerInterceptor {
     //可以在这个方法中对Controller 处理之后的ModelAndView 对象进行操作。
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
         //将公共函数对象传到页面
-        httpServletRequest.setAttribute("commons",commons);
+        httpServletRequest.setAttribute("commons", commons);
     }
 
     @Override

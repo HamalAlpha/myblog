@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--注意命名空间映射-->
-<mapper namespace="top.arieslee.myblog.dao.ContentVoDao">
+<mapper namespace="top.arieslee.myblog.dao.LogVoDao">
     <resultMap id="BaseResultMap" type="top.arieslee.myblog.modal.VO.LogVo">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="action" jdbcType="VARCHAR" property="action"/>

@@ -14,12 +14,15 @@ import top.arieslee.myblog.exception.TipException;
 import top.arieslee.myblog.modal.VO.UserVo;
 import top.arieslee.myblog.service.IUserService;
 import top.arieslee.myblog.service.impl.LogService;
+import top.arieslee.myblog.utils.Commons;
 import top.arieslee.myblog.utils.IPKit;
 import top.arieslee.myblog.utils.MapCache;
 import top.arieslee.myblog.utils.WebKit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * @ClassName AuthController
@@ -45,7 +48,7 @@ public class AuthController extends BaseController {
     @Autowired
     private LogService logService;
 
-    @GetMapping("login")
+    @GetMapping("/login")
     public String login(){
         return "admin/login";
     }
@@ -61,7 +64,7 @@ public class AuthController extends BaseController {
                              @RequestParam String password,
                              @RequestParam(required = false) String remember_me,
                              HttpServletRequest request, HttpServletResponse response) {
-        //获取登录错误次数
+        //获取登录错误次数,默认只有一个管理员在线，故这里缓存并没有绑定ip
         Integer errorCount = cachePool.get("login_error_count");
         if(errorCount!=null&&errorCount>=3){
             return ResponseDto.fail("您输入密码已经错误超过3次，请做40个仰卧起坐后再次尝试");
@@ -72,7 +75,7 @@ public class AuthController extends BaseController {
             request.getSession().setAttribute("user", userVo);
             //判断用户是否勾选了记住账户
             if (StringUtils.isNotBlank(remember_me)) {
-                WebKit.setCookie(WebConstant.LOGI_SESSION_KEY, userVo.getUid().toString(), 60 * 30, response);
+                WebKit.setCookie(WebConstant.USER_IN_COOKIE, userVo.getUid().toString(), 60 * 30, response);
             }
             //日志记录
             logService.insertLog(LogAction.LOGIN.getAction(),null,userVo.getUid(),IPKit.getIPAddrByRequest(request));
@@ -89,5 +92,22 @@ public class AuthController extends BaseController {
             return ResponseDto.fail(msg);
         }
         return ResponseDto.ok();
+    }
+
+    /**
+     * @Description 管理员注销
+     **/
+    @RequestMapping("/logout")
+    public void logout(HttpSession session,HttpServletRequest request,HttpServletResponse response){
+        //从session中删除用户属性
+        session.removeAttribute(WebConstant.LOGIN_SESSION_KEY);
+        //清空cookie缓存
+        WebKit.clearCookie(WebConstant.USER_IN_COOKIE,response);
+        //转到登录页面
+        try {
+            response.sendRedirect(Commons.site_login());
+        } catch (IOException e) {
+            LOGGER.error("注销失败");
+        }
     }
 }

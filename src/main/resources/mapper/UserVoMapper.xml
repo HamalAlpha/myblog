@@ -79,4 +79,11 @@
             <include refid="Example_Where_Clause"/>
         </if>
     </select>
+    
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="top.arieslee.myblog.modal.VO.UserVo">
+        select
+        <include refid="Base_Column_List" />
+        from t_users
+        where uid=#{uid,jdbcType=INTEGER}
+    </select>
 </mapper>
