@@ -151,7 +151,7 @@ public class ContentVoExample {
         /**
          * @Description : 状态相等条件
          **/
-        public Criteria andStatusEauqlTo(String value) {
+        public Criteria andStatusEqualTo(String value) {
             addCriterion("status=", value, "status");
             return (Criteria) this;
         }

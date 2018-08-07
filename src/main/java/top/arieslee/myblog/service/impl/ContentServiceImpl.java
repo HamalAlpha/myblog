@@ -46,7 +46,7 @@ public class ContentServiceImpl implements IContentService {
         //排序方式
         example.setOrderByClause("created desc");
         //指定查询标准
-        example.createCriteria().andTypeEqualTo(Types.ARTICLE.getType()).andStatusEauqlTo(Types.PUBLISH.getType());
+        example.createCriteria().andTypeEqualTo(Types.ARTICLE.getType()).andStatusEqualTo(Types.PUBLISH.getType());
         //执行分页插件（三部曲）：设定分页条件->获取分页内容->执行分页操作
         PageHelper.startPage(p, limit);
         List<ContentVo> contentVos = contentVoDao.selectByExampleWithBLOBs(example);

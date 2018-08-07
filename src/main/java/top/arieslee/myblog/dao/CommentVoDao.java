@@ -36,4 +36,9 @@ public interface CommentVoDao {
      * @Description 插入评论（有选择地插入字段）
      **/
     void insertSelective(CommentVo commentVo);
+
+    /**
+     * @Description 查询总数量
+     **/
+    long countByExample(CommentVoExample example);
 }

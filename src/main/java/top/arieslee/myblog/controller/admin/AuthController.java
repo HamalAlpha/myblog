@@ -49,7 +49,7 @@ public class AuthController extends BaseController {
     private LogService logService;
 
     @GetMapping("/login")
-    public String login(){
+    public String login() {
         return "admin/login";
     }
 
@@ -66,23 +66,23 @@ public class AuthController extends BaseController {
                              HttpServletRequest request, HttpServletResponse response) {
         //获取登录错误次数,默认只有一个管理员在线，故这里缓存并没有绑定ip
         Integer errorCount = cachePool.get("login_error_count");
-        if(errorCount!=null&&errorCount>=3){
+        if (errorCount != null && errorCount >= 3) {
             return ResponseDto.fail("您输入密码已经错误超过3次，请做40个仰卧起坐后再次尝试");
         }
         try {
             //用户名密码验证
             UserVo userVo = userService.login(username, password);
-            request.getSession().setAttribute("user", userVo);
+            request.getSession().setAttribute(WebConstant.LOGIN_SESSION_KEY, userVo);
             //判断用户是否勾选了记住账户
             if (StringUtils.isNotBlank(remember_me)) {
                 WebKit.setCookie(WebConstant.USER_IN_COOKIE, userVo.getUid().toString(), 60 * 30, response);
             }
             //日志记录
-            logService.insertLog(LogAction.LOGIN.getAction(),null,userVo.getUid(),IPKit.getIPAddrByRequest(request));
+            logService.insertLog(LogAction.LOGIN.getAction(), null, userVo.getUid(), IPKit.getIPAddrByRequest(request));
         } catch (Exception e) {
             errorCount = errorCount == null ? 1 : errorCount + 1;
             //记录登录错误次数
-            cachePool.set("login_error_count",errorCount,60L);
+            cachePool.set("login_error_count", errorCount, 60L);
             String msg = "登录失败";
             if (e instanceof TipException) {
                 msg = e.getMessage();
@@ -98,11 +98,11 @@ public class AuthController extends BaseController {
      * @Description 管理员注销
      **/
     @RequestMapping("/logout")
-    public void logout(HttpSession session,HttpServletRequest request,HttpServletResponse response){
+    public void logout(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         //从session中删除用户属性
         session.removeAttribute(WebConstant.LOGIN_SESSION_KEY);
         //清空cookie缓存
-        WebKit.clearCookie(WebConstant.USER_IN_COOKIE,response);
+        WebKit.clearCookie(WebConstant.USER_IN_COOKIE, response);
         //转到登录页面
         try {
             response.sendRedirect(Commons.site_login());

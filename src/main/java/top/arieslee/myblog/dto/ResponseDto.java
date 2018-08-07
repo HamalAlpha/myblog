@@ -26,11 +26,11 @@ public class ResponseDto<T> {
     /**
      * @Description 响应信息
      **/
-    private String message;
+    private String msg;
 
-    public ResponseDto(boolean success, String message) {
+    public ResponseDto(boolean success, String msg) {
         this.success = success;
-        this.message = message;
+        this.msg = msg;
     }
 
     public ResponseDto(boolean success) {
@@ -69,11 +69,11 @@ public class ResponseDto<T> {
         this.data = data;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

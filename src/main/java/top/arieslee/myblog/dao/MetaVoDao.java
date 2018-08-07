@@ -38,4 +38,9 @@ public interface MetaVoDao {
      * @Param
      **/
     List<MetaVo> selectByExample(MetaVoExample example);
+
+    /**
+     * @Description 查询数量
+     **/
+    long countByExample(MetaVoExample example);
 }

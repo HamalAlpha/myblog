@@ -2,6 +2,9 @@ package top.arieslee.myblog.dao;
 
 import org.springframework.stereotype.Repository;
 import top.arieslee.myblog.modal.VO.LogVo;
+import top.arieslee.myblog.modal.VO.LogVoExample;
+
+import java.util.List;
 
 /**
  * @ClassName LogVoDao
@@ -17,4 +20,6 @@ public interface LogVoDao {
      * @Description 插入一条日志数据
      **/
     int insert(LogVo logVo);
+
+    List<LogVo> selectByExample(LogVoExample example);
 }

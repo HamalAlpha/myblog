@@ -75,6 +75,11 @@
         </if>
     </select>
 
+    <select id="countByExample" parameterType="top.arieslee.myblog.modal.VO.CommentVoExample" resultType="java.lang.Long">
+        select count(*) from t_comments
+        <include refid="Example_Where_Clause" />
+    </select>
+    
     <insert id="insertComment" parameterType="top.arieslee.myblog.modal.VO.CommentVo" useGeneratedKeys="true"
             keyProperty="coid">
         insert into t_comments (coid, cid, created,

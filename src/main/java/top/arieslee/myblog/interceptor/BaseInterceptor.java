@@ -58,17 +58,17 @@ public class BaseInterceptor implements HandlerInterceptor {
             }
         }
 
-        //拦截未登录的管理员请求
-        if (uri.startsWith("/admin") && !uri.startsWith("/admin/login") && user == null) {
-            response.sendRedirect(request.getContextPath() + "/admin/login");
-            return false;
-        }
-
-        //对已登录的login请求，直接跳转到首页
-        if (user != null && uri.startsWith("/admin/login")) {
-            response.sendRedirect(request.getContextPath() + "/admin/index");
-            return false;
-        }
+//        //拦截未登录的管理员请求
+//        if (uri.startsWith("/admin") && !uri.startsWith("/admin/login") && user == null) {
+//            response.sendRedirect(request.getContextPath() + "/admin/login");
+//            return false;
+//        }
+//
+//        //对已登录的login请求，直接跳转到首页
+//        if (user != null && uri.startsWith("/admin/login")) {
+//            response.sendRedirect(request.getContextPath() + "/admin/index");
+//            return false;
+//        }
 
         //设置get请求csrf_token
         if (request.getMethod().equals("GET")) {

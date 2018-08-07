@@ -58,4 +58,9 @@ public interface ContentVoDao {
      * @Param []
      **/
     List<ArchiveDto> findArchiveDtoByMonth();
+
+    /**
+     * @Description 查询数量
+     **/
+    long countByExample(ContentVoExample example);
 }

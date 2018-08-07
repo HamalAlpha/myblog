@@ -2,6 +2,8 @@ package top.arieslee.myblog.service;
 
 import top.arieslee.myblog.modal.VO.LogVo;
 
+import java.util.List;
+
 /**
  * @ClassName ILogService
  * @Description 日志业务逻辑
@@ -25,4 +27,12 @@ public interface ILogService {
      * @Description 插入新的日志记录
      **/
     void insertLog(String action, String data, int authorId, String ip);
+
+    /**
+     * @param page 页码
+     * @param limit 每页限制
+     * @return java.util.List<top.arieslee.myblog.modal.VO.LogVo>
+     * @Description 分页获取日志记录
+     **/
+    List<LogVo> getLogs(int page,int limit);
 }

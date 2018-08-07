@@ -33,6 +33,11 @@ public class WebConstant {
     public static final int MAX_PAGE = 100;
 
     /**
+     * @Description 每页上限数
+     **/
+    public static final int MAX_LIMIT = 100;
+
+    /**
      * @Description : 保存前台页面配置信息
      **/
     public static final Map<String, String> initConfig = new HashMap<>();
