@@ -75,17 +75,114 @@
         </if>
     </select>
 
+    <select id="countByExample" parameterType="top.arieslee.myblog.modal.VO.CommentVoExample" resultType="java.lang.Long">
+        select count(*) from t_comments
+        <include refid="Example_Where_Clause" />
+    </select>
+    
     <insert id="insertComment" parameterType="top.arieslee.myblog.modal.VO.CommentVo" useGeneratedKeys="true"
             keyProperty="coid">
-    insert into t_comments (coid, cid, created,
-      author, author_id, owner_id,
-      mail, url, ip, agent,
-      type, status, parent,
-      content)
-    values (#{coid,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, #{created,jdbcType=INTEGER},
-      #{author,jdbcType=VARCHAR}, #{authorId,jdbcType=INTEGER}, #{ownerId,jdbcType=INTEGER},
-      #{mail,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{agent,jdbcType=VARCHAR},
-      #{type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{parent,jdbcType=INTEGER},
-      #{content,jdbcType=LONGVARCHAR})
-  </insert>
+        insert into t_comments (coid, cid, created,
+          author, author_id, owner_id,
+          mail, url, ip, agent,
+          type, status, parent,
+          content)
+        values (#{coid,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, #{created,jdbcType=INTEGER},
+          #{author,jdbcType=VARCHAR}, #{authorId,jdbcType=INTEGER}, #{ownerId,jdbcType=INTEGER},
+          #{mail,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{agent,jdbcType=VARCHAR},
+          #{type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{parent,jdbcType=INTEGER},
+          #{content,jdbcType=LONGVARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="top.arieslee.myblog.modal.VO.ContentVo" useGeneratedKeys="true"
+            keyProperty="coid">
+        insert into t_comments
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="coid != null">
+                coid,
+            </if>
+            <if test="cid != null">
+                cid,
+            </if>
+            <if test="created != null">
+                created,
+            </if>
+            <if test="author != null">
+                author,
+            </if>
+            <if test="authorId != null">
+                author_id,
+            </if>
+            <if test="ownerId != null">
+                owner_id,
+            </if>
+            <if test="mail != null">
+                mail,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="ip != null">
+                ip,
+            </if>
+            <if test="agent != null">
+                agent,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="parent != null">
+                parent,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="coid != null">
+                #{coid,jdbcType=INTEGER},
+            </if>
+            <if test="cid != null">
+                #{cid,jdbcType=INTEGER},
+            </if>
+            <if test="created != null">
+                #{created,jdbcType=INTEGER},
+            </if>
+            <if test="author != null">
+                #{author,jdbcType=VARCHAR},
+            </if>
+            <if test="authorId != null">
+                #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="ownerId != null">
+                #{ownerId,jdbcType=INTEGER},
+            </if>
+            <if test="mail != null">
+                #{mail,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null">
+                #{ip,jdbcType=VARCHAR},
+            </if>
+            <if test="agent != null">
+                #{agent,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="parent != null">
+                #{parent,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
 </mapper>

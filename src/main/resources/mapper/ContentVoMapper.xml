@@ -220,4 +220,9 @@
         </set>
         where cid = #{cid,jdbcType=INTEGER}
     </update>
+
+    <select id="countByExample" parameterType="top.arieslee.myblog.modal.VO.ContentVoExample" resultType="java.lang.Long" >
+        select count(*) from t_contents
+        <include refid="Example_Where_Clause" />
+    </select>
 </mapper>

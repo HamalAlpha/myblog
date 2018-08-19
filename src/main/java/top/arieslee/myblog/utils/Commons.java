@@ -1,11 +1,13 @@
 package top.arieslee.myblog.utils;
 
+import com.github.pagehelper.PageInfo;
 import com.vdurmont.emoji.EmojiParser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import top.arieslee.myblog.constant.WebConstant;
 import top.arieslee.myblog.modal.VO.ContentVo;
 
+import javax.tools.Tool;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -45,32 +47,39 @@ public class Commons {
     }
 
     /**
-     * @Description : 返回网站链接
+     * @Description : 站点链接
      **/
     public static String site_url() {
         return site_url("");
     }
 
     /**
-     * @Description : 返回完整网址
+     * @Description : 站点链接
      **/
     public static String site_url(String sub) {
         return site_option("site_url") + sub;
     }
 
     /**
-     * @Description : 获取文章链接
+     * @Description : 文章链接
      **/
     public static String permlink(ContentVo contentVo) {
         return permlink(contentVo.getCid(), contentVo.getSlug());
     }
 
     /**
-     * @Description : 文章链接拼接
+     * @Description : 文章链接完整地址
      **/
     public static String permlink(Integer cid, String slug) {
-        String str = "/ariticle/" + (StringUtils.isNotBlank(slug) ? slug : cid.toString());
+        String str = "/article/" + (StringUtils.isNotBlank(slug) ? slug : cid.toString());
         return site_url(str);
+    }
+
+    /**
+     * @Description 跳转到管理员登录页
+     **/
+    public static String site_login() {
+        return "/admin/login";
     }
 
     /**
@@ -79,7 +88,7 @@ public class Commons {
     public static String show_thumbnail(ContentVo contentVo) {
         int size = contentVo.getCid() % 20;
         size = size == 0 ? 1 : size;
-        return "/user/img/rand/" + size + ".jpg";
+        return "/user/images/rand/" + size + ".jpg";
     }
 
     //图标库
@@ -118,7 +127,7 @@ public class Commons {
 
     public static String fmtdate(Integer created, String ftm) {
         if (created != null && StringUtils.isNotBlank(ftm)) {
-            return DateKit.formatDateByUnixTime(created,ftm);
+            return DateKit.formatDateByUnixTime(created, ftm);
         }
         return "";
     }
@@ -138,7 +147,7 @@ public class Commons {
     /**
      * @Description 将类似 :smile: 这样的字符串转为emoji表情
      **/
-    public static String emoji(String value){
+    public static String emoji(String value) {
         return EmojiParser.parseToUnicode(value);
     }
 
@@ -147,13 +156,30 @@ public class Commons {
      * @Description 将markdown文章内容解析为html
      * @Param [content 文章内容]
      **/
-    public static String markdownParse(String content){
-        if(StringUtils.isNotBlank(content)){
+    public static String markdownParse(String content) {
+        if (StringUtils.isNotBlank(content)) {
             //将注释去除
-            content=content.replace("<!--more-->","\r\n");
+            content = content.replace("<!--more-->", "\r\n");
             //调用解析工具
             return Tools.mdToHtml(content);
         }
         return "";
+    }
+
+    /**
+     * 判断分页中是否有数据
+     *
+     * @param paginator
+     * @return
+     */
+    public static boolean is_empty(PageInfo paginator) {
+        return paginator == null || (paginator.getList() == null) || (paginator.getList().size() == 0);
+    }
+
+    /**
+     * @Description 获取随机数
+     **/
+    public static String random(int max, String str) {
+        return Tools.getRandom(max, 1) + str;
     }
 }

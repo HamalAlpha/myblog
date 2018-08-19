@@ -43,7 +43,7 @@ public class UUID {
         uuid64[index++] = _UUID64[i];
         //前64位剩余的62位先分割10次，剩余2位单独处理
         for (int off = 56; off >= 2; off -= 6) {
-            long hex = (least & (mask << off) >>> off);
+            long hex = (least & (mask << off)) >>> off;
             uuid64[index++] = _UUID64[(int) hex];
         }
         //处理剩余2位

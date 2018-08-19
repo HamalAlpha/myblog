@@ -27,8 +27,18 @@ public interface CommentVoDao {
     List<CommentVo> selectByExampleWithBLOBs(CommentVoExample example);
 
     /**
-     * @Description 插入评论
+     * @Description 插入评论（所有字段）
      * @return void
      **/
     void insertComment(CommentVo commentVo);
+    
+    /**
+     * @Description 插入评论（有选择地插入字段）
+     **/
+    void insertSelective(CommentVo commentVo);
+
+    /**
+     * @Description 查询总数量
+     **/
+    long countByExample(CommentVoExample example);
 }

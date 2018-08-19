@@ -19,7 +19,7 @@ import java.util.List;
  * @Version 1.0
  **/
 @Service
-public class MetaService implements IMetaService {
+public class MetaServiceImpl implements IMetaService {
 
     @Autowired
     private MetaVoDao metaVoDao;

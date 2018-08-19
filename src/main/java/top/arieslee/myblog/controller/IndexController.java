@@ -25,9 +25,9 @@ import top.arieslee.myblog.service.IContentService;
 import top.arieslee.myblog.service.IMetaService;
 import top.arieslee.myblog.service.ISiteService;
 import top.arieslee.myblog.utils.IPKit;
-import top.arieslee.myblog.utils.MapCache;
 import top.arieslee.myblog.utils.PatternKit;
 import top.arieslee.myblog.utils.Tools;
+import top.arieslee.myblog.utils.WebKit;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -113,7 +113,7 @@ public class IndexController extends BaseController {
     }
 
     /**
-     * @Description : 配置评论组件
+     * @Description : 显示评论
      **/
     public void commentSet(HttpServletRequest request, ContentVo contentVo) {
         //文章允许评论
@@ -132,7 +132,7 @@ public class IndexController extends BaseController {
     }
 
     /**
-     * @Description 评论操作
+     * @Description 评论提交
      **/
     @PostMapping("comment")
     @ResponseBody
@@ -199,9 +199,9 @@ public class IndexController extends BaseController {
         try {
             commentService.insertComment(commentVo);
             //添加cookie
-            setCookie("comment_user_name", commentVo.getAuthor(), 1 * 24 * 60 * 60, response);
-            setCookie("comment_user_mail", commentVo.getMail(), 1 * 24 * 60 * 60, response);
-            setCookie("comment_user_url", commentVo.getUrl(), 1 * 24 * 60 * 60, response);
+            WebKit.setCookie("comment_user_name", commentVo.getAuthor(), 1 * 24 * 60 * 60, response);
+            WebKit.setCookie("comment_user_mail", commentVo.getMail(), 1 * 24 * 60 * 60, response);
+            WebKit.setCookie("comment_user_url", commentVo.getUrl(), 1 * 24 * 60 * 60, response);
             //设置评论频率缓存
             cachePool.set(Types.COMMENT_FREQUENCY.getType(), 1, 60, ip, cid.toString());
             //返回成功结果
@@ -222,13 +222,12 @@ public class IndexController extends BaseController {
      * @Description 分类页请求
      **/
     @GetMapping("category/{keyword}")
-    public String categories(HttpServletRequest request, @PathVariable("keyword") String keyword, @RequestParam(value = "limit", defaultValue = "1") int limit) {
+    public String categories(HttpServletRequest request, @PathVariable("keyword") String keyword, @RequestParam(value = "limit", defaultValue = "6") int limit) {
         return this.categories(request, keyword, 1, limit);
     }
 
     @GetMapping("category/{keyword}/{page}")//前台分页尚未完成
-    public String categories(HttpServletRequest request, @PathVariable("keyword") String keyword, @PathVariable("page") int page, @RequestParam(value = "limit", defaultValue = "1") int limit) {
-        page = page <= 0 || page > WebConstant.MAX_PAGE ? 1 : page;
+    public String categories(HttpServletRequest request, @PathVariable("keyword") String keyword, @PathVariable("page") int page, @RequestParam(value = "limit", defaultValue = "6") int limit) {
         MetaDto metaDto = metaService.getMetaCount(Types.CATEGORY.getType(), keyword);
         //没有找到关键字分类信息，返回404页面
         if (metaDto == null) {
@@ -236,6 +235,7 @@ public class IndexController extends BaseController {
         }
 
         //查找分类下的归档页
+        page = page <= 0 || page > WebConstant.MAX_PAGE ? 1 : page;
         PageInfo<ContentVo> contentsPaginator = contentService.getArticles(metaDto.getMid(), page, limit);
 
         //设置页面参数
@@ -251,10 +251,10 @@ public class IndexController extends BaseController {
      * @Description 归档页
      * @Param [request]
      **/
-    @GetMapping("archive")
+    @GetMapping("archives")
     public String archives(HttpServletRequest request) {
-        List<ArchiveDto> achives = iSiteService.getArchives();
-        request.setAttribute("achives", achives);
+        List<ArchiveDto> archives = iSiteService.getArchives();
+        request.setAttribute("archives", archives);
         return super.rend("archives");
     }
 
@@ -263,7 +263,7 @@ public class IndexController extends BaseController {
      * @Description 友链页
      * @Param [request]
      **/
-    @GetMapping("link")
+    @GetMapping("links")
     public String link(HttpServletRequest request) {
         List<MetaVo> links = metaService.getLinks(Types.LINK.getType());
         request.setAttribute("links", links);
@@ -297,7 +297,7 @@ public class IndexController extends BaseController {
             request.setAttribute("comments", commentDtoPageInfo);
         }
         request.setAttribute("article", contentVo);
-        return super.rend(pagename);
+        return super.rend("custom");
     }
 
 
@@ -323,17 +323,5 @@ public class IndexController extends BaseController {
         } else {
             cachePool.set(Types.ARTICLE.getType(), hits, String.valueOf(cid));
         }
-    }
-
-    /**
-     * @return void
-     * @Description 为用户添加cookie值
-     * @Param [key：键, value：值, maxAge：有效期, response：响应对象]
-     **/
-    public void setCookie(String key, String value, int maxAge, HttpServletResponse response) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(maxAge);
-        cookie.setSecure(false);//表示可用于http和https传回cookie
-        response.addCookie(cookie);
     }
 }

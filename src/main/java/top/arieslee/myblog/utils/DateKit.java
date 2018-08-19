@@ -26,7 +26,7 @@ public class DateKit {
 
     /**
      * @return java.util.Date
-     * @Description 将字符串解析为日期对象
+     * @Description 将日期字符串解析为日期类对象
      * @Param [date 字符串, format 解析类型]
      **/
     public static Date dateParse(String date, String format) {
@@ -45,16 +45,16 @@ public class DateKit {
 
     /**
      * @return java.lang.String
-     * @Description 格式化时间校准器
-     * @Param [unixTime 时间校准器, ftm 指定格式]
+     * @Description 格式化时间
+     * @Param [unixTime 秒为单位的时间戳, ftm 指定格式]
      **/
     public static String formatDateByUnixTime(long unixTime, String ftm) {
         return formatDate(new Date(unixTime * 1000L), ftm);
     }
 
     /**
-     * @return java.lang.String
-     * @Description 格式化时间戳
+     * @return java.lang.String 返回格式后的时间
+     * @Description 格式化时间
      * @Param [date, ftm]
      **/
     public static String formatDate(Date date, String ftm) {
@@ -72,9 +72,13 @@ public class DateKit {
         return (int) (date.getTime() / 1000L);
     }
 
+    public static int getCurrentUnixTime(){
+        return getUnixTimeByDate(new Date());
+    }
+
     /**
      * @return java.util.Date
-     * @Description 在原有时间上增加一段时间，这里待改进，没有考虑每月不一定为30天，每年不一定365的情况
+     * @Description 在原有时间上增加一段时间，这里待改进，没有考虑每月不一定为30天，每年不一定365天的情况
      * @Param [interval 增加幅度：年、月等, date 原时间, n 增加数量]
      **/
     public static Date dateAdd(int interval, Date date, int n) {

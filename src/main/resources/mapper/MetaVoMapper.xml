@@ -99,6 +99,11 @@
         </if>
     </select>
 
+    <select id="countByExample" parameterType="top.arieslee.myblog.modal.VO.MetaVoExample" resultType="java.lang.Long">
+        select count(*) from t_metas
+        <include refid="Example_Where_Clause" />
+    </select>
+
     <select id="selectByTypeAndName" resultMap="MetaDto">
         select meta.*,count(relationship.cid) as count
         from t_metas as meta left join `t_relationships` as relationship on meta.mid=relationship.mid
