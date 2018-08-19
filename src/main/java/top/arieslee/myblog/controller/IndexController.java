@@ -66,7 +66,7 @@ public class IndexController extends BaseController {
      * @Param [request, limit:每页文章数量]
      **/
     @GetMapping(value = {"/", "index"})
-    public String index(HttpServletRequest request, @RequestParam(value = "limit", defaultValue = "1") int limit) {
+    public String index(HttpServletRequest request, @RequestParam(value = "limit", defaultValue = "12") int limit) {
         //调用文章分页接口处理
         return this.index(request, 1, limit);
     }
@@ -78,7 +78,7 @@ public class IndexController extends BaseController {
      * @Param [request, p:当前页码, limit:每页文章数量]
      **/
     @GetMapping(value = {"page/{p}", "page/{p}.html"})
-    public String index(HttpServletRequest request, @PathVariable("p") int p, @RequestParam(value = "limit", defaultValue = "1") int limit) {
+    public String index(HttpServletRequest request, @PathVariable("p") int p, @RequestParam(value = "limit", defaultValue = "12") int limit) {
         //判断页码是否合法,不合法置为1
         p = p < 1 || p > WebConstant.MAX_PAGE ? 1 : p;
         //调用业务层接口，获取mybatis分页插件执行结果

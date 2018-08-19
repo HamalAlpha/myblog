@@ -144,7 +144,7 @@
         from t_contents
         where type='post' and status='publish'
         group by date
-        order by created desc
+        order by date desc
     </select>
 
     <!--

@@ -12,7 +12,7 @@
     <!--搜索引擎关键字-->
     <meta name="keywords" th:content="${keywords ?: commons.site_option('site_keywords')}"/>
     <meta name="description" th:content="${description ?:commons.site_option('site_description')}"/>
-    <link rel="shortcut icon" th:href="@{/user/img/favicon.png}"/>
+    <link rel="shortcut icon" th:href="@{/user/images/favicon.png}"/>
     <link rel="apple-touch-icon" th:href="@{/user/img/apple-touch-icon.png}"/>
     <title>
         <th:block th:text="${title ?: '首页'}+' - '+${commons.site_option('site_title','My Blog')}"></th:block>
@@ -36,7 +36,7 @@
     <header id="header" class="header bg-white">
         <div class="navbar-container">
             <a th:href="${commons.site_url('/index')}" class="navbar-logo">
-                <img th:src="@{/user/img/logo.png}" alt="首页"/>
+                <img th:src="@{/user/images/logo.png}" alt="首页"/>
             </a>
             <div class="navbar-menu">
                 <a th:href="${commons.site_url('/archives')}">归档</a>

@@ -470,14 +470,14 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     width: auto;
     max-width: 50%;
     height: 22px;
-    margin-top: -16px;
+    margin-top: -30px;
     margin-left: 25px;
     text-decoration: none
 }
 
 .navbar-logo img {
     width: auto;
-    height: 32px;
+    height: 64px;
     outline: 0
 }
 
