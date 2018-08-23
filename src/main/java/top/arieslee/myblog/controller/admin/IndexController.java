@@ -42,10 +42,14 @@ public class IndexController extends BaseController {
     @GetMapping(value = {"", "/index"})
     public String index(HttpServletRequest request) {
         LOGGER.debug("Enter the index method");
-        List<CommentVo> commentVos=siteService.recentComment(5);//近期评论
-        List<ContentVo> contentVos=siteService.recentContent(5);//近期文章
-        List<LogVo> logVos=logService.getLogs(1,5);//近期日志
-        StatisticsDto statisticsDto=siteService.currentStatistics();//站点信息
+        //近期评论
+        List<CommentVo> commentVos=siteService.recentComment(5);
+        //近期文章
+        List<ContentVo> contentVos=siteService.recentContent(5);
+        //近期日志
+        List<LogVo> logVos=logService.getLogs(1,5);
+        //站点信息
+        StatisticsDto statisticsDto=siteService.currentStatistics();
 
         request.setAttribute("comments", commentVos);
         request.setAttribute("articles", contentVos);

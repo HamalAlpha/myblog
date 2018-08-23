@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import top.arieslee.myblog.constant.WebConstant;
 import top.arieslee.myblog.modal.VO.ContentVo;
 
-import javax.tools.Tool;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -20,6 +19,7 @@ import java.net.URLEncoder;
  **/
 @Component
 public class Commons {
+
 
     /**
      * @Description : 网站配置项
@@ -110,7 +110,7 @@ public class Commons {
             String str[] = categories.split(",");
             StringBuilder sb = new StringBuilder();
             for (String s : str) {
-                sb.append("<a href=\"/category/" + URLEncoder.encode(s, "UTF-8") + "\">" + s + "</a>");
+                sb.append("<a href=\""+Tools.getContextPath()+"/category/" + URLEncoder.encode(s, "UTF-8") + "\">" + s + "</a>");
             }
             return sb.toString();
         }
@@ -152,10 +152,10 @@ public class Commons {
     }
 
     /**
-     * @return java.lang.String
+            * @return java.lang.String
      * @Description 将markdown文章内容解析为html
      * @Param [content 文章内容]
-     **/
+            **/
     public static String markdownParse(String content) {
         if (StringUtils.isNotBlank(content)) {
             //将注释去除

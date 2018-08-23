@@ -31,7 +31,6 @@ public class WebKit {
         try {
             //AES加密
             value = Tools.enAES(value, WebConstant.AES_SALT);
-            System.out.println(Tools.deAES("zHU574bYI1Q3DLtjitDfwA==", WebConstant.AES_SALT));
             Cookie cookie = new Cookie(name, value);
             if (StringUtils.isNotBlank(path)) {
                 cookie.setPath(path);
@@ -87,7 +86,9 @@ public class WebKit {
     public static UserVo getUser(HttpServletRequest request) {
         if (request != null) {
             HttpSession session = request.getSession();
-            if (session != null) return (UserVo) session.getAttribute(WebConstant.LOGIN_SESSION_KEY);
+            if (session != null) {
+                return (UserVo) session.getAttribute(WebConstant.LOGIN_SESSION_KEY);
+            }
         }
         return null;
     }

@@ -46,10 +46,10 @@ public class CoreApplication extends SpringBootServletInitializer {
 
     //配置SqlSessionFactory
     @Bean
-    public SqlSessionFactory sqlSessionFactory() throws Exception{
+    public SqlSessionFactory sqlSessionFactory() throws Exception {
         //搜索资源对象
-        PathMatchingResourcePatternResolver resolver=new PathMatchingResourcePatternResolver();
-        SqlSessionFactoryBean sqlSessionFactoryBean=new SqlSessionFactoryBean();
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         //注入dataSource依赖
         sqlSessionFactoryBean.setDataSource(dataSource());
         //注入Mapper配置文件
@@ -59,7 +59,7 @@ public class CoreApplication extends SpringBootServletInitializer {
 
     //事务管理
     @Bean
-    public PlatformTransactionManager transactionManager(){
+    public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
     }
 

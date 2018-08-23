@@ -23,7 +23,7 @@
             subComment: function () {
                 $.ajax({
                     type: 'post',
-                    url: '/comment',
+                    url: baseUrl +'/comment',
                     data: $('#comment-form').serialize(),
                     async: false,
                     dataType: 'json',
@@ -42,6 +42,7 @@
             }
         };
     })();
+
     function getCommentCookie(name) {
         var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
         if (arr = document.cookie.match(reg))
@@ -49,11 +50,13 @@
         else
             return null;
     }
+
     function addCommentInputValue() {
         document.getElementById('author').value = getCommentCookie('tale_remember_author');
         document.getElementById('mail').value = getCommentCookie('tale_remember_mail');
         document.getElementById('url').value = getCommentCookie('tale_remember_url');
     }
+
     addCommentInputValue();
     /*]]>*/
 </script>

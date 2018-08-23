@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -11,6 +13,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -169,10 +172,21 @@ public class Tools {
      * @param max 最大值（包括）
      * @param min 最小值（包括）
      * @return int
-     * @Description 
+     * @Description
      **/
     public static int getRandom(int max, int min) {
         Random r = new Random();
         return r.nextInt(max - min + 1) + min;
+    }
+
+    /**
+     * @param
+     * @return java.lang.String
+     * @Description 获取项目上下文路径
+     **/
+    public static String getContextPath() {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+        return request.getContextPath();
     }
 }
