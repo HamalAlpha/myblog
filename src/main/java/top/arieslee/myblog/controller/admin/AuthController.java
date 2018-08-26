@@ -105,7 +105,12 @@ public class AuthController extends BaseController {
         WebKit.clearCookie(WebConstant.USER_IN_COOKIE, response);
         //转到登录页面
         try {
-            response.sendRedirect(Commons.site_login());
+            if (request.getHeader("Referer") != null) {
+                response.sendRedirect(request.getHeader("Referer"));
+            } else {
+                response.sendRedirect(Commons.site_login());
+            }
+
         } catch (IOException e) {
             LOGGER.error("注销失败");
         }

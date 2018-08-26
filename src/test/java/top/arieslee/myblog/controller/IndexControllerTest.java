@@ -39,9 +39,4 @@ public class IndexControllerTest {
     public void getArticleBySlug() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders.get("/article/about")).andExpect(MockMvcResultMatchers.status().isOk());
     }
-
-    @Test
-    public void setComment() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.post("/comment")).andExpect(MockMvcResultMatchers.status().isOk());
-    }
 }

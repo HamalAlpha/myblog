@@ -9,6 +9,8 @@ import top.arieslee.myblog.modal.VO.ContentVo;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @ClassName Commons
@@ -20,6 +22,11 @@ import java.net.URLEncoder;
 @Component
 public class Commons {
 
+
+    /**
+     * @descript
+     **/
+    private static final String[] ICON_LIBRARY = {"bg-ico-book", "bg-ico-game", "bg-ico-note", "bg-ico-chat", "bg-ico-code", "bg-ico-image", "bg-ico-web", "bg-ico-link", "bg-ico-design", "bg-ico-lock"};
 
     /**
      * @Description : 网站配置项
@@ -79,7 +86,7 @@ public class Commons {
      * @Description 跳转到管理员登录页
      **/
     public static String site_login() {
-        return "/admin/login";
+        return Tools.getContextPath()+"/admin/login";
     }
 
     /**
@@ -90,9 +97,6 @@ public class Commons {
         size = size == 0 ? 1 : size;
         return "/user/images/rand/" + size + ".jpg";
     }
-
-    //图标库
-    private static final String[] ICON_LIBRARY = {"bg-ico-book", "bg-ico-game", "bg-ico-note", "bg-ico-chat", "bg-ico-code", "bg-ico-image", "bg-ico-web", "bg-ico-link", "bg-ico-design", "bg-ico-lock"};
 
     /**
      * @Description 获取一张小图标
@@ -110,7 +114,7 @@ public class Commons {
             String str[] = categories.split(",");
             StringBuilder sb = new StringBuilder();
             for (String s : str) {
-                sb.append("<a href=\""+Tools.getContextPath()+"/category/" + URLEncoder.encode(s, "UTF-8") + "\">" + s + "</a>");
+                sb.append("<a href=\"" + Tools.getContextPath() + "/category/" + URLEncoder.encode(s, "UTF-8") + "\">" + s + "</a>");
             }
             return sb.toString();
         }
@@ -152,10 +156,10 @@ public class Commons {
     }
 
     /**
-            * @return java.lang.String
+     * @return java.lang.String
      * @Description 将markdown文章内容解析为html
      * @Param [content 文章内容]
-            **/
+     **/
     public static String markdownParse(String content) {
         if (StringUtils.isNotBlank(content)) {
             //将注释去除
@@ -164,6 +168,24 @@ public class Commons {
             return Tools.mdToHtml(content);
         }
         return "";
+    }
+
+    /**
+     * @return java.util.Map<java.lang.String,java.lang.String>
+     * @descript 获取社交链接
+     **/
+    public static Map<String, String> social() {
+        final String prefix = "social_";
+        HashMap<String, String> map = new HashMap<>();
+        map.put("weibo", WebConstant.initConfig.get(prefix + "weibo"));
+        map.put("zhihu", WebConstant.initConfig.get(prefix + "zhihu"));
+        map.put("github", WebConstant.initConfig.get(prefix + "github"));
+        map.put("twitter", WebConstant.initConfig.get(prefix + "twitter"));
+        return map;
+    }
+
+    public static String site_title(){
+        return site_option("site_title");
     }
 
     /**

@@ -16,7 +16,7 @@ public class ResponseDto<T> {
     /**
      * @Description 状态码
      **/
-    private int code;
+    private int code = -1;
 
     /**
      * @Description 封装数据
@@ -37,11 +37,11 @@ public class ResponseDto<T> {
         this.success = success;
     }
 
-    public static ResponseDto fail(String msg){
-        return new ResponseDto(false,msg);
+    public static ResponseDto fail(String msg) {
+        return new ResponseDto(false, msg);
     }
 
-    public static ResponseDto ok(){
+    public static ResponseDto ok() {
         return new ResponseDto(true);
     }
 

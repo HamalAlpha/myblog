@@ -12,6 +12,6 @@
     <div id="post-content" class="post-content" th:utext="${commons.markdownParse(article.content)}"></div>
 </article>
 <div th:replace="themes/default/comments::comments"></div>
-<!--<div th:replace="themes/default/footer::footer"></div>-->
+<div th:replace="themes/default/baseFrame/footer::footer"></div>
 </body>
 </html>

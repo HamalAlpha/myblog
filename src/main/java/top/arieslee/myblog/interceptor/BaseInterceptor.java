@@ -45,12 +45,16 @@ public class BaseInterceptor implements HandlerInterceptor {
 
         String uri = request.getRequestURI();
 
+        //上下文路径
+        String contextPath=request.getContextPath();
+
         //尝试从session中获取管理员用户
         UserVo user = WebKit.getUser(request);
 
         //尝试从cookie中获取uid，并获取user
         if (user == null) {
-            Integer uid = WebKit.getUid(WebConstant.USER_IN_COOKIE, request);//cookie可以伪造，待改进
+            //cookie可以伪造，待改进
+            Integer uid = WebKit.getUid(WebConstant.USER_IN_COOKIE, request);
             if (uid != null) {
                 user = userVoDao.selectByPrimaryKey(uid);
                 //设置session
@@ -58,12 +62,12 @@ public class BaseInterceptor implements HandlerInterceptor {
             }
         }
 
-//        //拦截未登录的管理员请求
-//        if (uri.startsWith("/admin") && !uri.startsWith("/admin/login") && user == null) {
-//            response.sendRedirect(request.getContextPath() + "/admin/login");
-//            return false;
-//        }
-//
+        //拦截未登录的管理员请求
+        if (uri.startsWith(contextPath+"/admin") && !uri.startsWith(contextPath+"/admin/login") && user == null) {
+            response.sendRedirect(contextPath + "/admin/login");
+            return false;
+        }
+
 //        //对已登录的login请求，直接跳转到首页
 //        if (user != null && uri.startsWith("/admin/login")) {
 //            response.sendRedirect(request.getContextPath() + "/admin/index");
