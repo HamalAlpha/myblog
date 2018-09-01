@@ -1,5 +1,7 @@
 package top.arieslee.myblog.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.regex.Pattern;
 
 /**
@@ -37,6 +39,16 @@ public class PatternKit {
      **/
     public static boolean isNum(String str) {
         if (str != null && str.trim().length() != 0 && str.matches("\\d*")) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @Description 验证是否有效路径
+     **/
+    public static boolean isPath(String path){
+        if(StringUtils.isNotBlank(path)&&path.matches("[0-9A-Za-z_-]+")){
             return true;
         }
         return false;

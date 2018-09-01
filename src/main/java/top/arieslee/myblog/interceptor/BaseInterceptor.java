@@ -9,12 +9,7 @@ import top.arieslee.myblog.constant.Types;
 import top.arieslee.myblog.constant.WebConstant;
 import top.arieslee.myblog.dao.UserVoDao;
 import top.arieslee.myblog.modal.VO.UserVo;
-import top.arieslee.myblog.service.IUserService;
-import top.arieslee.myblog.service.impl.UserServiceImpl;
-import top.arieslee.myblog.utils.Commons;
-import top.arieslee.myblog.utils.MapCache;
-import top.arieslee.myblog.utils.UUID;
-import top.arieslee.myblog.utils.WebKit;
+import top.arieslee.myblog.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,8 +64,8 @@ public class BaseInterceptor implements HandlerInterceptor {
         }
 
 //        //对已登录的login请求，直接跳转到首页
-//        if (user != null && uri.startsWith("/admin/login")) {
-//            response.sendRedirect(request.getContextPath() + "/admin/index");
+//        if (user != null && uri.startsWith(contextPath+"/admin/login")) {
+//            response.sendRedirect(contextPath + "/admin/index");
 //            return false;
 //        }
 

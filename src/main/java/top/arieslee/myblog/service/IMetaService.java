@@ -22,9 +22,16 @@ public interface IMetaService {
     MetaDto getMetaCount(String type, String name);
 
     /**
+     * @Param []
+     * @Return java.util.List<top.arieslee.myblog.modal.VO.MetaVo>
+     * @Description 获取指定类型列表
+     **/
+    List<MetaVo> getMetas(String type);
+
+    /**
      * @return java.util.List<top.arieslee.myblog.modal.VO.MetaVo>
      * @Description 获取友情链接
-     * @Param 
+     * @Param
      **/
     List<MetaVo> getLinks(String type);
 }

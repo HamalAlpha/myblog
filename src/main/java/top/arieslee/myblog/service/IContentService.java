@@ -11,6 +11,13 @@ import top.arieslee.myblog.modal.VO.ContentVo;
  * @Version 1.0
  **/
 public interface IContentService {
+
+    /**  
+     * @Param [contentVo]
+     * @Return void  
+     * @Description 发布文章
+     **/ 
+    void publish(ContentVo contentVo);
     
     /**
      * @Description : 获取分页列表

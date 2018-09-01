@@ -33,6 +33,14 @@ public class MetaServiceImpl implements IMetaService {
     }
 
     @Override
+    public List<MetaVo> getMetas(String type) {
+        MetaVoExample example=new MetaVoExample();
+        example.createCriteria().andTypeEqualTo(type);
+        List<MetaVo> metaVos=metaVoDao.selectByExample(example);
+        return metaVos;
+    }
+
+    @Override
     public List<MetaVo> getLinks(String type) {
         if(StringUtils.isNotBlank(type)){
             MetaVoExample example=new MetaVoExample();

@@ -7,13 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.arieslee.myblog.dao.ContentVoDao;
 import top.arieslee.myblog.constant.Types;
+import top.arieslee.myblog.constant.WebConstant;
+import top.arieslee.myblog.dao.ContentVoDao;
 import top.arieslee.myblog.dao.MetaVoDao;
 import top.arieslee.myblog.exception.TipException;
 import top.arieslee.myblog.modal.VO.ContentVo;
 import top.arieslee.myblog.modal.VO.ContentVoExample;
 import top.arieslee.myblog.service.IContentService;
+import top.arieslee.myblog.utils.DateKit;
 import top.arieslee.myblog.utils.PatternKit;
 
 import java.util.List;
@@ -27,15 +29,59 @@ import java.util.List;
  **/
 @Service
 public class ContentServiceImpl implements IContentService {
-    //log日志对象
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ContentServiceImpl.class);
 
-    //注入dao层实例对象
     @Autowired
     private ContentVoDao contentVoDao;
 
     @Autowired
     private MetaVoDao metaVoDao;
+
+
+    @Override
+    public void publish(ContentVo content) {
+        if (content == null) {
+            throw new TipException("文章对象不存在");
+        }
+        if (StringUtils.isBlank(content.getTitle())) {
+            throw new TipException("文章标题不能为空");
+        }
+        if (StringUtils.isBlank(content.getContent())) {
+            throw new TipException("文章内容不能为空");
+        }
+        if (content.getTitle().length() > WebConstant.MAX_TITLE_LENGTH) {
+            throw new TipException("文章标题太长了");
+        }
+        if (content.getContent().length() > WebConstant.MAX_CONTENT_LENGTH) {
+            throw new TipException("文章内容太长了");
+        }
+        if (content.getAuthorId() == null) {
+            throw new TipException("请先登录");
+        }
+        if (StringUtils.isNotBlank(content.getSlug())) {
+            String slug = content.getSlug();
+            if (slug.length() < 5) {
+                throw new TipException("路径长度不小于5喔~");
+            }
+            if (!PatternKit.isPath(slug)) {
+                throw new TipException("非法路径啦");
+            }
+            ContentVoExample example = new ContentVoExample();
+            example.createCriteria().andSlugEqualTo(slug);
+            if (contentVoDao.countByExample(example) > 0) {
+                throw new TipException("该路径已经存在了");
+            }
+        } else {
+            content.setSlug(null);
+        }
+
+        //填充content对象属性
+        content.setCreated((long) DateKit.getCurrentUnixTime());
+        content.setModified((long)DateKit.getCurrentUnixTime());
+        content.setHits(0);
+        content.setCommentsNum(0);
+    }
 
     @Override
     //获取分页列表
@@ -103,8 +149,8 @@ public class ContentServiceImpl implements IContentService {
 
     @Override
     //更新文章内容
-    public void updateContentByCid(ContentVo content){
-        if(content!=null&&content.getCid()!=null){
+    public void updateContentByCid(ContentVo content) {
+        if (content != null && content.getCid() != null) {
             contentVoDao.updateByPrimaryKeySelective(content);
         }
     }

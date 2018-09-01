@@ -655,8 +655,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 }
 
 .main-content {
-    max-width: 940px;
-    margin: 0 auto;
+    max-width: 940px !important;
+    margin: 0 auto 50px;
+    background-color: white;
     -webkit-animation: fade-in .5s;
     animation: fade-in;
     animation-duration: .5s
@@ -815,7 +816,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 
 .post-page {
     max-width: 700px;
-    padding: 130px 25px 20px
+    padding: 130px 50px 60px
 }
 
 .post-content p {

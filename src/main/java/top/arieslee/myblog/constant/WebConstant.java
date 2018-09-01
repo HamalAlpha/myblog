@@ -46,4 +46,14 @@ public class WebConstant {
      * @Description 临界点击数
      **/
     public static final int CRITICAL_HIT = 10;
+
+    /**
+     * @Description 最大文章标题长度
+     **/
+    public static final int MAX_TITLE_LENGTH=100;
+
+    /**
+     * @Description 最大文章内容长度
+     **/
+    public static final int MAX_CONTENT_LENGTH=200000;
 }
